@@ -227,7 +227,7 @@ void Scene_Title::CreateCommandWindow() {
 	// Set "Settings" based on the configuration
 	if (Player::player_config.settings_in_title.Get()) {
 		// FIXME: Translation? Not shown by default though
-		options.push_back("Settings");
+		options.push_back("Cài đặt");
 		indices.settings = indices.exit;
 		indices.exit++;
 	}
