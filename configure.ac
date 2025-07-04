@@ -7,7 +7,7 @@ AC_PREREQ([2.69])
 m4_define([ep_version_major], [0])
 m4_define([ep_version_minor], [8])
 m4_define([ep_version_patch], [1])
-m4_define([ep_version_tweak], [0])
+m4_define([ep_version_tweak], [1])
 m4_define([ep_version], [ep_version_major.ep_version_minor])
 m4_append([ep_version], m4_if(ep_version_tweak, 0,
 		m4_if(ep_version_patch, 0,, [.ep_version_patch]),
@@ -123,10 +123,6 @@ AS_IF([test "x$with_audio" != "xno"],[
 	])
 ])
 AM_CONDITIONAL([HAVE_ALSA], [test "$with_alsa" = "yes"])
-
-# fonts
-AC_DEFINE([WANT_FONT_BAEKMUK],[1],[Baekmuk font (Korean)])
-AC_DEFINE([WANT_FONT_WQY],[1],[WenQuanYi font (Chinese)])
 
 # bash completion
 AC_ARG_WITH([bash-completion-dir],[AS_HELP_STRING([--with-bash-completion-dir@<:@=DIR@:>@],
