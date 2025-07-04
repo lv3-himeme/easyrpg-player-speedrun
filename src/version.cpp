@@ -66,7 +66,7 @@ namespace Version {
 	std::string GetVersionString(bool with_git, bool with_append) {
 		std::string ver = Version::STRING;
 		if (with_git && std::strlen(GIT) > 0) {
-			ver += std::string(" ") + GIT;
+			//ver += std::string(" ") + GIT;
 		}
 		if (with_append && std::strlen(APPEND) > 0) {
 			ver += std::string(" ") + APPEND;
