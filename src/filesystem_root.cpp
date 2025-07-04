@@ -124,7 +124,7 @@ const Filesystem& RootFilesystem::FilesystemForPath(std::string_view path) const
 
 	if (it == fs_list.end()) {
 		// Only possible to trigger via commandline or bogus code, always user/dev error -> abort
-		Output::Error("Unsupported namespace {}://{}", ns, path);
+		Output::Error("Đường dẫn không được hỗ trợ {}://{}", ns, path);
 	}
 
 	return *it->second;

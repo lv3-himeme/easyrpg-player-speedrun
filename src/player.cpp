@@ -685,8 +685,7 @@ Game_Config Player::ParseCommandLine() {
 void Player::CreateGameObjects() {
 	// Parse game specific settings
 	CmdlineParser cp(arguments);
-	game_config = Game_ConfigGame();
-	game_config.Initialize(cp);
+	game_config = Game_ConfigGame::Create(cp);
 
 	// Reinit MIDI
 	MidiDecoder::Reset();
@@ -879,7 +878,7 @@ void Player::UpdateTitle(std::string new_game_title) {
 
 bool Player::ChangeResolution(int width, int height) {
 	if (!DisplayUi->ChangeDisplaySurfaceResolution(width, height)) {
-		Output::Warning("Resolution change to {}x{} failed", width, height);
+		Output::Warning("Không thể thay đổi độ phân giải thành {}x{}", width, height);
 		return false;
 	}
 
@@ -1182,7 +1181,7 @@ void Player::LoadSavegame(const std::string& save_name, int save_id) {
 	Output::Debug("Savegame version {} ({})", ver, verstr.str());
 
 	if (ver > PLAYER_SAVEGAME_VERSION) {
-		Output::Warning("This savegame was created with {} which is newer than the current version of EasyRPG Player ({})",
+		Output::Warning("Tệp tin lưu game này được tạo bằng phiên bản {} và nó mới hơn phiên bản hiện tại của EasyRPG Player ({})",
 			verstr.str(), Version::STRING);
 	}
 
@@ -1464,8 +1463,6 @@ Engine options:
  --patch-direct-menu VAR
                       Directly access subscreens of the default menu by setting
                       VAR.
- --patch-encounter-alert VAR
-                      Set troop id to variable VAR and skip random battles.
  --patch-dynrpg       Enable support of DynRPG patch by Cherry (very limited).
  --patch-easyrpg      Enable EasyRPG extensions.
  --patch-key-patch    Enable Key Patch by Ineluki.

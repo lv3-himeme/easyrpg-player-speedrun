@@ -31,6 +31,7 @@
 #include "bitmap.h"
 #include "audio.h"
 #include "output.h"
+#include "version.h"
 
 Scene_GameBrowser::Scene_GameBrowser() {
 	type = Scene::GameBrowser;
@@ -91,10 +92,10 @@ void Scene_GameBrowser::CreateWindows() {
 	// Create Options Window
 	std::vector<std::string> options;
 
-	options.push_back("Games");
-	options.push_back("Settings");
-	options.push_back("About");
-	options.push_back("Exit");
+	options.push_back("Trò chơi");
+	options.push_back("Cài đặt");
+	options.push_back("Giới thiệu");
+	options.push_back("Thoát");
 
 	command_window = std::make_unique<Window_Command_Horizontal>(options, Player::screen_width);
 	command_window->SetY(32);
@@ -108,10 +109,10 @@ void Scene_GameBrowser::CreateWindows() {
 	}
 
 	help_window = std::make_unique<Window_Help>(0, 0, Player::screen_width, 32);
-	help_window->SetText("EasyRPG Player - RPG Maker 2000/2003 interpreter");
+	help_window->SetText("EasyRPG Player Việt Hoá - v" + Version::GetVersionString(true, true));
 
 	load_window = std::make_unique<Window_Help>(Player::screen_width / 4, Player::screen_height / 2 - 16, Player::screen_width / 2, 32);
-	load_window->SetText("Loading...");
+	load_window->SetText("Đang tải...");
 	load_window->SetVisible(false);
 
 	about_window = std::make_unique<Window_About>(0, 64, Player::screen_width, Player::screen_height - 64);
@@ -193,7 +194,7 @@ void Scene_GameBrowser::BootGame() {
 	auto entry = gamelist_window->GetFilesystemEntry();
 
 	if (!entry.fs) {
-		Output::Warning("The selected file or directory cannot be opened");
+		Output::Warning("Không thể mở tệp tin hoặc thư mục đã chọn");
 		load_window->SetVisible(false);
 		game_loading = false;
 		return;
@@ -208,7 +209,7 @@ void Scene_GameBrowser::BootGame() {
 		// Game is using a known unsupported engine
 		Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Buzzer));
 		Output::Warning(
-				"{} has unsupported engine {}",
+				"{} có engine không được hỗ trợ là {}",
 				FileFinder::GetPathAndFilename(entry.fs.GetFullPath()).second,
 				FileFinder::kProjectType.tag(entry.type)
 		);
@@ -222,7 +223,7 @@ void Scene_GameBrowser::BootGame() {
 		load_window->SetVisible(false);
 		game_loading = false;
 		if (!gamelist_window->Refresh(entry.fs, true)) {
-			Output::Warning("The selected file or directory cannot be opened");
+			Output::Warning("Không thể mở tệp tin hoặc thư mục đã chọn");
 			return;
 		}
 		stack.push_back({ entry.fs, gamelist_window->GetIndex() });

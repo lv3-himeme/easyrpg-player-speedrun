@@ -37,7 +37,7 @@ void Window_ImportProgress::SetProgress(int pct, const std::string& path) {
 void Window_ImportProgress::Refresh() {
 	contents->Clear();
 
-	contents->TextDraw(0, 2, Font::ColorDefault, "Searching for files...", Text::AlignLeft);
+	contents->TextDraw(0, 2, Font::ColorDefault, "Đang tìm kiếm tệp tin...", Text::AlignLeft);
 
 	Rect inner(1, 16+3, 142, 16-6);
 	Rect outer(inner.x-1, inner.y-1, inner.width+2, inner.height+2);
@@ -47,5 +47,5 @@ void Window_ImportProgress::Refresh() {
 	inner.width = (inner.width*percent) / 100;
 	contents->FillRect(inner, Color(0xFF, 0x00, 0x00, 0xFF));
 
-	contents->TextDraw(0, 2 + 32, Font::ColorDefault, std::string("Folder: ") + curr_path, Text::AlignLeft);
+	contents->TextDraw(0, 2 + 32, Font::ColorDefault, std::string("Thư mục: ") + curr_path, Text::AlignLeft);
 }

@@ -261,7 +261,7 @@ namespace {
 
 				if (!is) {
 					if (s.warn_missing) {
-						Output::Warning("Image not found: {}/{}", s.directory, filename);
+						Output::Warning("Không thể tìm thấy hình ảnh: {}/{}", s.directory, filename);
 					} else {
 						Output::Debug("Image not found: {}/{}", s.directory, filename);
 						bmp = CreateEmpty<T>();
@@ -272,13 +272,13 @@ namespace {
 							T == Material::System ? Bitmap::Flag_System : 0);
 					bmp = Bitmap::Create(std::move(is), transparent, flags);
 					if (!bmp) {
-						Output::Warning("Invalid image: {}/{}", s.directory, filename);
+						Output::Warning("Không thể tìm thấy hình ảnh: {}/{}", s.directory, filename);
 					} else {
 						if (bmp->GetOriginalBpp() > 8) {
 							// FIXME: This HasActiveTranslation check will also load 32 bit images in the game directory when
 							// a translation is active and our API does not expose whether the asset was redirected or not.
 							if (!Player::HasEasyRpgExtensions() && !Player::IsPatchManiac() && !Tr::HasActiveTranslation()) {
-								Output::Warning("Image {}/{} has a bit depth of {} that is not supported by RPG_RT. Enable EasyRPG Extensions or Maniac Patch to load such images.", s.directory, filename, bmp->GetOriginalBpp());
+								Output::Warning("Hình ảnh {}/{} có độ sâu bit là {} vốn không được hỗ trợ bởi RPG_RT. Hãy mở Trình mở rộng EasyRPG (EasyRPG Extensions) hoặc Maniac Patch để tải các hình ảnh dạng này.", s.directory, filename, bmp->GetOriginalBpp());
 								bmp.reset();
 							}
 						}

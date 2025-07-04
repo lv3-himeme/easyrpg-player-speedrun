@@ -292,7 +292,7 @@ void Window_Settings::RefreshAudio() {
 	AddOption(cfg.music_volume, [this](){ Audio().BGM_SetGlobalVolume(GetCurrentOption().current_value); });
 	AddOption(cfg.sound_volume, [this](){ Audio().SE_SetGlobalVolume(GetCurrentOption().current_value); });
 	if (cfg.fluidsynth_midi.IsOptionVisible() || cfg.wildmidi_midi.IsOptionVisible() || cfg.native_midi.IsOptionVisible() || cfg.fmmidi_midi.IsOptionVisible()) {
-		AddOption(MenuItem("MIDI drivers", "Configure MIDI playback", ""), [this]() { Push(eAudioMidi); });
+		AddOption(MenuItem("Trình điều khiển MIDI", "Cài đặt phát nhạc MIDI", ""), [this]() { Push(eAudioMidi); });
 	}
 	AddOption(cfg.soundfont, [this](){ Push(eAudioSoundfont); });
 }
@@ -305,10 +305,10 @@ void Window_Settings::RefreshAudioMidi() {
 	if (cfg.fluidsynth_midi.IsOptionVisible()) {
 		AddOption(cfg.fluidsynth_midi, []() { Audio().SetFluidsynthEnabled(Audio().GetConfig().fluidsynth_midi.Toggle()); });
 		if (!MidiDecoder::CheckFluidsynth(GetFrame().options.back().help2)) {
-			GetFrame().options.back().text += " [Not working]";
+			GetFrame().options.back().text += " [Không hoạt động]";
 			GetFrame().options.back().color = Font::ColorKnockout;
 		} else if (cfg.fluidsynth_midi.Get()) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 			used = true;
 		}
 	}
@@ -316,10 +316,10 @@ void Window_Settings::RefreshAudioMidi() {
 	if (cfg.wildmidi_midi.IsOptionVisible()) {
 		AddOption(cfg.wildmidi_midi, []() { Audio().SetWildMidiEnabled(Audio().GetConfig().wildmidi_midi.Toggle()); });
 		if (!MidiDecoder::CheckWildMidi(GetFrame().options.back().help2)) {
-			GetFrame().options.back().text += " [Not working]";
+			GetFrame().options.back().text += " [Không hoạt động]";
 			GetFrame().options.back().color = Font::ColorKnockout;
 		} else if (cfg.wildmidi_midi.Get() && !used) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 			used = true;
 		}
 	}
@@ -328,10 +328,10 @@ void Window_Settings::RefreshAudioMidi() {
 		AddOption(cfg.native_midi, []() { Audio().SetNativeMidiEnabled(Audio().GetConfig().native_midi.Toggle()); });
 		auto midi_out = Audio().CreateAndGetMidiOut();
 		if (!midi_out || !midi_out->IsInitialized(GetFrame().options.back().help2)) {
-			GetFrame().options.back().text += " [Not working]";
+			GetFrame().options.back().text += " [Không hoạt động]";
 			GetFrame().options.back().color = Font::ColorKnockout;
 		} else if (cfg.native_midi.Get() && !used) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 			used = true;
 		}
 	}
@@ -339,12 +339,12 @@ void Window_Settings::RefreshAudioMidi() {
 	if (cfg.fmmidi_midi.IsOptionVisible()) {
 		AddOption(cfg.fmmidi_midi, []() {});
 		if (!used) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 		}
 	}
 
-	AddOption(MenuItem("> Information <", "The first active and working option is used for MIDI", ""), [](){});
-	GetFrame().options.back().help2 = "Changes take effect when a new MIDI file is played";
+	AddOption(MenuItem("> Thông tin <", "Trình phát sẽ sử dụng tùy chọn MIDI đầu tiên đang hoạt động", ""), [](){});
+	GetFrame().options.back().help2 = "Các thay đổi sẽ có hiệu lực khi tệp MIDI mới được phát";
 }
 
 void Window_Settings::RefreshAudioSoundfont() {
@@ -357,7 +357,7 @@ void Window_Settings::RefreshAudioSoundfont() {
 	fs.ClearCache();
 
 	auto acfg = Audio().GetConfig();
-	AddOption(MenuItem("<Autodetect>", "Attempt to find a suitable soundfont automatically", acfg.soundfont.Get().empty() ? "[x]" : ""), [this]() {
+	AddOption(MenuItem("<Tự phát hiện>", "Cố gắng tìm một soundfont phù hợp nhất", acfg.soundfont.Get().empty() ? "[x]" : ""), [this]() {
 		Audio().SetFluidsynthSoundfont({});
 		Pop();
 	});
@@ -368,7 +368,7 @@ void Window_Settings::RefreshAudioSoundfont() {
 	std::string sf_lower = Utils::LowerCase(Audio().GetFluidsynthSoundfont());
 	for (const auto& item: *list) {
 		if (item.second.type == DirectoryTree::FileType::Regular && (EndsWith(item.first, ".sf2") || EndsWith(item.first, ".soundfont"))) {
-			AddOption(MenuItem(item.second.name, "Use this custom soundfont", EndsWith(sf_lower, item.first) ? "[x]" : ""), [this, fs, item]() {
+			AddOption(MenuItem(item.second.name, "Sử dụng soundfont tuỳ chỉnh này", EndsWith(sf_lower, item.first) ? "[x]" : ""), [this, fs, item]() {
 				Audio().SetFluidsynthSoundfont(FileFinder::MakePath(fs.GetFullPath(), item.second.name));
 				Pop();
 			});
@@ -376,13 +376,13 @@ void Window_Settings::RefreshAudioSoundfont() {
 	}
 
 	for (auto& opt: GetFrame().options) {
-		opt.help2 = "Changes take effect when a new MIDI file is played";
+		opt.help2 = "Các thay đổi sẽ có hiệu lực khi tệp MIDI mới được phát";
 	}
 
 #ifdef EMSCRIPTEN
-	AddOption(MenuItem("<Upload Soundfont>", "Provide a soundfont from your system", ""), [fs]() { Emscripten_Interface::UploadSoundfont(); });
+	AddOption(MenuItem("<Tải soundfont lên>", "Cung cấp một tệp soundfont từ thiết bị của bạn", ""), [fs]() { Emscripten_Interface::UploadSoundfont(); });
 #elif defined(SUPPORT_FILE_BROWSER)
-	AddOption(MenuItem("<Open Soundfont directory>", "Open the soundfont directory in a file browser", ""), [fs]() { DisplayUi->OpenURL(fs.GetFullPath()); });
+	AddOption(MenuItem("<Mở thư mục soundfont>", "Mở thư mục soundfont trên trình quản lý tệp", ""), [fs]() { DisplayUi->OpenURL(fs.GetFullPath()); });
 #endif
 }
 
@@ -402,10 +402,10 @@ void Window_Settings::RefreshEngine() {
 	});
 	if (cfg.font1.IsOptionVisible()) {
 		if (cfg.font1.IsLocked()) {
-			GetFrame().options.back().help = "This game uses a custom font";
+			GetFrame().options.back().help = "Trò chơi này có sử dụng font tuỳ chỉnh";
 		}
 		if (Main_Data::game_system->GetFontId() == lcf::rpg::System::Font_gothic) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 		}
 	}
 
@@ -416,10 +416,10 @@ void Window_Settings::RefreshEngine() {
 	});
 	if (cfg.font2.IsOptionVisible()) {
 		if (cfg.font2.IsLocked()) {
-			GetFrame().options.back().help = "This game uses a custom font";
+			GetFrame().options.back().help = "Trò chơi này có sử dụng font tuỳ chỉnh";
 		}
 		if (Main_Data::game_system->GetFontId() == lcf::rpg::System::Font_mincho) {
-			GetFrame().options.back().text += " [In use]";
+			GetFrame().options.back().text += " [Đang sử dụng]";
 		}
 	}
 
@@ -432,7 +432,7 @@ void Window_Settings::RefreshEngine() {
 	AddOption(cfg.log_enabled, [&cfg]() { cfg.log_enabled.Toggle(); });
 	AddOption(cfg.screenshot_scale, [this, &cfg](){ cfg.screenshot_scale.Set(GetCurrentOption().current_value); });
 
-	GetFrame().options.back().help2 = fmt::format("Screenshot size: {}x{}",
+	GetFrame().options.back().help2 = fmt::format("Kích thước ảnh chụp màn hình: {}x{}",
 		Player::screen_width * cfg.screenshot_scale.Get(), Player::screen_height * cfg.screenshot_scale.Get());
 
 	auto fmt_sample_name = [](bool is_auto_screenshot) {
@@ -444,11 +444,11 @@ void Window_Settings::RefreshEngine() {
 	};
 
 	AddOption(cfg.screenshot_timestamp, [this, &cfg]() { cfg.screenshot_timestamp.Toggle(); });
-	GetFrame().options.back().help2 = fmt::format("Sample name: {}", fmt_sample_name(false));
+	GetFrame().options.back().help2 = fmt::format("Tên tệp mẫu: {}", fmt_sample_name(false));
 
 	AddOption(cfg.automatic_screenshots, [&cfg]() { cfg.automatic_screenshots.Toggle(); });
 	if (Player::player_config.automatic_screenshots.Get()) {
-		GetFrame().options.back().help2 = fmt::format("Sample name: {}", fmt_sample_name(true));
+		GetFrame().options.back().help2 = fmt::format("Tên tệp mẫu: {}", fmt_sample_name(true));
 	}
 	AddOption(cfg.automatic_screenshots_interval, [this, &cfg]() { cfg.automatic_screenshots_interval.Set(GetCurrentOption().current_value); });
 }
@@ -470,7 +470,7 @@ void Window_Settings::RefreshEngineFont(bool mincho) {
 		GetFrame().options.back().help2 = ToString(sample_text.GetDescriptions()[static_cast<int>(sample_text.Get())]);
 	};
 
-	AddOption(MenuItem("<Built-in Font>", "Use the built-in pixel font", setting.Get().empty() ? "[x]" : ""), [this, &setting, mincho]() {
+	AddOption(MenuItem("<Phông chữ có sẵn>", "Sử dụng phông chữ pixel có sẵn", setting.Get().empty() ? "[x]" : ""), [this, &setting, mincho]() {
 		Font::SetDefault(nullptr, mincho);
 		setting.Set("");
 		Pop();
@@ -487,7 +487,7 @@ void Window_Settings::RefreshEngineFont(bool mincho) {
 		});
 
 		if (item.second.type == DirectoryTree::FileType::Regular && is_font) {
-			AddOption(MenuItem(item.second.name, "Use this font", EndsWith(font_lower, item.first) ? "[x]" : ""), [=, &cfg, &setting]() mutable {
+			AddOption(MenuItem(item.second.name, "Sử dụng phông chữ này", EndsWith(font_lower, item.first) ? "[x]" : ""), [=, &cfg, &setting]() mutable {
 				if (Input::IsTriggered(Input::LEFT) || Input::IsRepeated(Input::LEFT)) {
 					if (font_size.Get() == font_size.GetMin()) {
 						font_size.Set(font_size.GetMax());
@@ -530,104 +530,100 @@ void Window_Settings::RefreshEngineFont(bool mincho) {
 	set_help2();
 
 #ifdef EMSCRIPTEN
-	AddOption(MenuItem("<Upload Font>", "Provide a font from your system", ""), [fs]() { Emscripten_Interface::UploadFont(); });
+	AddOption(MenuItem("<Tải phông chữ lên>", "Cung cấp phông chữ từ thiết bị của bạn", ""), [fs]() { Emscripten_Interface::UploadFont(); });
 #elif defined(SUPPORT_FILE_BROWSER)
-	AddOption(MenuItem("<Open Font directory>", "Open the font directory in a file browser", ""), [fs]() { DisplayUi->OpenURL(fs.GetFullPath()); });
+	AddOption(MenuItem("<Mở thư mục phông chữ>", "Mở thư mục phông chữ trên trình quản lý tệp", ""), [fs]() { DisplayUi->OpenURL(fs.GetFullPath()); });
 #endif
 }
 
 void Window_Settings::RefreshLicense() {
-	AddOption(MenuItem("EasyRPG Player", "The engine you are using :)", "GPLv3+"), [this](){
+	AddOption(MenuItem("EasyRPG Player", "Là cái phần mềm bạn đang sử dụng đấy :)", "GPLv3+"), [this](){
 		Push(eAbout);
 	});
-	AddOption(MenuItem("liblcf", "Handles RPG Maker 2000/2003 and EasyRPG projects", "MIT"), [](){});
-	AddOption(MenuItem("libpng", "For reading and writing PNG image files", "zlib"), [](){});
-	AddOption(MenuItem("zlib", "Implements deflate used in ZIP archives and PNG images", "zlib"), [](){});
-	AddOption(MenuItem("Pixman", "Pixel-manipulation library", "MIT"), [](){});
-	AddOption(MenuItem("fmtlib", "Text formatting library", "BSD"), [](){});
+	AddOption(MenuItem("liblcf", "Xử lý các dự án RPG Maker 2000/2003 và EasyRPG", "MIT"), [](){});
+	AddOption(MenuItem("libpng", "Đọc và ghi ảnh PNG", "zlib"), [](){});
+	AddOption(MenuItem("zlib", "Triển khai thuật toán nén deflate được sử dụng trong tệp ZIP và hình ảnh PNG", "zlib"), [](){});
+	AddOption(MenuItem("Pixman", "Thư viện xử lý điểm ảnh", "MIT"), [](){});
+	AddOption(MenuItem("fmtlib", "Thư viện định dạng chữ", "BSD"), [](){});
 	// No way to detect them - Used by liblcf
-	AddOption(MenuItem("expat", "XML parser", "MIT"), [](){});
-	AddOption(MenuItem("ICU", "Unicode library", "ICU"), [](){});
+	AddOption(MenuItem("expat", "Trình phân tích XML", "MIT"), [](){});
+	AddOption(MenuItem("ICU", "Thư viện Unicode", "ICU"), [](){});
 #if USE_SDL == 1
-	AddOption(MenuItem("SDL1", "Abstraction layer for graphic, audio, input and more", "LGPLv2.1+"), [](){});
+	AddOption(MenuItem("SDL1", "Lớp trừu tượng cho đồ họa, âm thanh, đầu vào và hơn thế nữa", "LGPLv2.1+"), [](){});
 #elif USE_SDL == 2
-	AddOption(MenuItem("SDL2", "Abstraction layer for graphic, audio, input and more", "zlib"), [](){});
+	AddOption(MenuItem("SDL2", "Lớp trừu tượng cho đồ họa, âm thanh, đầu vào và hơn thế nữa", "zlib"), [](){});
 #elif USE_SDL == 3
-	AddOption(MenuItem("SDL3", "Abstraction layer for graphic, audio, input and more", "zlib"), [](){});
+	AddOption(MenuItem("SDL3", "Lớp trừu tượng cho đồ họa, âm thanh, đầu vào và hơn thế nữa", "zlib"), [](){});
 #endif
 #ifdef HAVE_FREETYPE
-	AddOption(MenuItem("Freetype", "Font parsing and rasterization library", "Freetype"), [](){});
+	AddOption(MenuItem("Freetype", "Thư viện phân tích và hiển thị phông chữ", "Freetype"), [](){});
 #endif
 #ifdef HAVE_HARFBUZZ
-	AddOption(MenuItem("Harfbuzz", "Text shaping engine", "MIT"), [](){});
+	AddOption(MenuItem("Harfbuzz", "Thư viện tạo hình chữ", "MIT"), [](){});
 #endif
 #ifdef SUPPORT_AUDIO
 	// Always shown because the Midi synth is compiled in
-	AddOption(MenuItem("FmMidi", "MIDI file parser and Yamaha YM2608 FM synthesizer", "BSD"), [](){});
+	AddOption(MenuItem("FmMidi", "Trình phân tích tệp MIDI và tổng hợp âm FM Yamaha YM2608", "BSD"), [](){});
+#endif
 #ifdef HAVE_LIBMPG123
-	AddOption(MenuItem("mpg123", "Decodes MPEG Audio Layer 1, 2 and 3", "LGPLv2.1+"), [](){});
+	AddOption(MenuItem("mpg123", "Giải mã âm thanh MPEG Layer 1, 2 và 3", "LGPLv2.1+"), [](){});
 #endif
 #ifdef HAVE_LIBSNDFILE
-	AddOption(MenuItem("libsndfile", "Decodes sampled audio data (WAV)", "LGPLv2.1+"), [](){});
+	AddOption(MenuItem("libsndfile", "Giải mã dữ liệu âm thanh mẫu (WAV)", "LGPLv2.1+"), [](){});
 #endif
 #ifdef HAVE_OGGVORBIS
-	AddOption(MenuItem("ogg", "Ogg container format library", "BSD"), [](){});
-	AddOption(MenuItem("vorbis", "Decodes the free Ogg Vorbis audio codec", "BSD"), [](){});
+	AddOption(MenuItem("ogg", "Thư viện định dạng vùng chứa Ogg", "BSD"), [](){});
+	AddOption(MenuItem("vorbis", "Giải mã codec âm thanh Ogg Vorbis miễn phí", "BSD"), [](){});
 #endif
 #ifdef HAVE_TREMOR
-	AddOption(MenuItem("tremor", "Decodes the free Ogg Vorbis audio format", "BSD"), [](){});
+	AddOption(MenuItem("tremor", "Giải mã định dạng âm thanh Ogg Vorbis miễn phí", "BSD"), [](){});
 #endif
 #ifdef HAVE_OPUS
-	AddOption(MenuItem("opus", "Decodes the free OPUS audio codec", "BSD"), [](){});
+	AddOption(MenuItem("opus", "Giải mã codec âm thanh OPUS miễn phí", "BSD"), [](){});
 #endif
 #ifdef HAVE_LIBWILDMIDI
-	AddOption(MenuItem("WildMidi", "MIDI synthesizer", "LGPLv3+"), [](){});
+	AddOption(MenuItem("WildMidi", "Bộ tổng hợp âm thanh MIDI", "LGPLv3+"), [](){});
 #endif
 #ifdef HAVE_FLUIDSYNTH
-	AddOption(MenuItem("FluidSynth", "MIDI synthesizer supporting SoundFont 2", "LGPLv2.1+"), [](){});
+	AddOption(MenuItem("FluidSynth", "Bộ tổng hợp MIDI hỗ trợ SoundFont 2", "LGPLv2.1+"), [](){});
 #endif
 #ifdef HAVE_FLUIDLITE
-	AddOption(MenuItem("FluidLite", "MIDI synthesizer supporting SoundFont 2 (lite version)", "LGPLv2.1+"), [](){});
+	AddOption(MenuItem("FluidLite", "Bộ tổng hợp MIDI hỗ trợ SoundFont 2 (phiên bản nhẹ)", "LGPLv2.1+"), [](){});
 #endif
 #ifdef HAVE_XMP
-	AddOption(MenuItem("xmp-lite", "Module (MOD, S3M, XM and IT) synthesizer", "MIT"), [](){});
+	AddOption(MenuItem("xmp-lite", "Bộ tổng hợp Module (MOD, S3M, XM và IT)", "MIT"), [](){});
 #endif
 #ifdef HAVE_LIBSPEEXDSP
-	AddOption(MenuItem("speexdsp", "Audio resampler", "BSD"), [](){});
+	AddOption(MenuItem("speexdsp", "Trình lấy mẫu lại âm thanh", "BSD"), [](){});
 #endif
 #ifdef HAVE_LIBSAMPLERATE
-	AddOption(MenuItem("samplerate", "Audio resampler", "BSD"), [](){});
+	AddOption(MenuItem("samplerate", "Trình lấy mẫu lại âm thanh", "BSD"), [](){});
 #endif
 #ifdef WANT_DRWAV
-	AddOption(MenuItem("dr_wav", "Decodes sampled audio data (WAV)", "MIT-0"), [](){});
+	AddOption(MenuItem("dr_wav", "Giải mã dữ liệu âm thanh mẫu (WAV)", "MIT-0"), [](){});
 #endif
 #ifdef HAVE_ALSA
-	AddOption(MenuItem("ALSA", "Linux sound support (used for MIDI playback)", "LGPL2.1+"), [](){});
-#endif
+	AddOption(MenuItem("ALSA", "Hỗ trợ âm thanh cho Linux (dùng để phát MIDI)", "LGPL2.1+"), [](){});
 #endif
 #ifdef HAVE_LHASA
-	AddOption(MenuItem("lhasa", "For parsing LHA (.lzh) archives", "ISC"), [](){});
+	AddOption(MenuItem("lhasa", "Phân tích các tệp lưu trữ LHA (.lzh)", "ISC"), [](){});
 #endif
 #ifdef HAVE_NLOHMANN_JSON
-	AddOption(MenuItem("nlohmann_json", "Processing of JSON files", "MIT"), [](){});
+	AddOption(MenuItem("nlohmann_json", "Xử lý tệp JSON", "MIT"), [](){});
 #endif
-#ifdef WANT_FONT_BAEKMUK
-	AddOption(MenuItem("Baekmuk", "Korean font family", "Baekmuk"), [](){});
-#endif
-	AddOption(MenuItem("Shinonome", "Japanese font family", "Public Domain"), [](){});
-	AddOption(MenuItem("ttyp0", "ttyp0 font family", "ttyp0"), [](){});
-#ifdef WANT_FONT_WQY
-	AddOption(MenuItem("WenQuanYi", "WenQuanYi font family (CJK)", "GPLv2+ with FE"), [](){});
-#endif
+	AddOption(MenuItem("Baekmuk", "Bộ phông chữ tiếng Hàn Baekmuk", "Baekmuk"), [](){});
+	AddOption(MenuItem("Shinonome", "Bộ phông chữ tiếng Nhật Shinonome", "Public Domain"), [](){});
+	AddOption(MenuItem("ttyp0", "Bộ phông chữ tty0", "ttyp0"), [](){});
+	AddOption(MenuItem("WenQuanYi", "Bộ phông chữ WenQuanYi (CJK)", "GPLv2+ với FE"), [](){});
 #ifdef EMSCRIPTEN
-	AddOption(MenuItem("Teenyicons", "Tiny minimal 1px icons", "MIT"), [](){});
+	AddOption(MenuItem("Teenyicons", "Biểu tượng nhỏ tối giản 1px", "MIT"), [](){});
 #endif
 }
 
 void Window_Settings::RefreshInput() {
 	Game_ConfigInput& cfg = Input::GetInputSource()->GetConfig();
 
-	AddOption(MenuItem("Key/Button mapping", "Change the keybindings", ""),
+	AddOption(MenuItem("Gán phím/Nút điều khiển", "Thay đổi phím điều khiển", ""),
 		[this]() { Push(eInputButtonCategory); });
 	AddOption(cfg.gamepad_swap_ab_and_xy, [&cfg](){ cfg.gamepad_swap_ab_and_xy.Toggle(); Input::ResetTriggerKeys(); });
 	AddOption(cfg.gamepad_swap_analog, [&cfg](){ cfg.gamepad_swap_analog.Toggle(); Input::ResetTriggerKeys(); });
@@ -637,11 +633,11 @@ void Window_Settings::RefreshInput() {
 }
 
 void Window_Settings::RefreshButtonCategory() {
-	AddOption(MenuItem("Game", "Buttons used by games", ""),
+	AddOption(MenuItem("Trò chơi", "Các phím được sử dụng bởi các trò chơi", ""),
 		[this]() { Push(eInputListButtonsGame, 0); });
-	AddOption(MenuItem("Engine", "Buttons to access engine features", ""),
+	AddOption(MenuItem("Phần mềm", "Các phím để truy cập vào các tính năng của phần mềm", ""),
 		[this]() { Push(eInputListButtonsEngine, 1); });
-	AddOption(MenuItem("Developer", "Buttons useful for developers", ""),
+	AddOption(MenuItem("Nhà phát triển", "Các phím hữu ích cho nhà phát triển", ""),
 		[this]() { Push(eInputListButtonsDeveloper, 2); });
 }
 

@@ -282,7 +282,7 @@ bool Scene_Title::CheckValidPlayerLocation() {
 
 void Scene_Title::CommandNewGame() {
 	if (!CheckValidPlayerLocation()) {
-		Output::Warning("The game has no start location set.");
+		Output::Warning("Game không cài đặt vị trí bắt đầu nào.");
 	} else {
 		Output::Debug("Starting new game");
 		Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Decision));

@@ -631,7 +631,7 @@ void Scene_Debug::vUpdate() {
 					PushUiInterpreterView();
 				} else if (sz == 1) {
 					if (!interpreter_states_cached) {
-						state_interpreter.background_states = Debug::ParallelInterpreterStates::GetCachedStates();
+						CacheBackgroundInterpreterStates();
 						interpreter_states_cached = true;
 					}
 					PushUiRangeList();
@@ -850,33 +850,32 @@ void Scene_Debug::UpdateRangeListWindow() {
 			break;
 		case eInterpreter:
 		{
-			auto& bg_states = state_interpreter.background_states;
-			int skip_items = range_page * 10;
-			int count_items = 0;
-			if (range_page == 0) {
-				addItem(fmt::format("{}Main", Game_Interpreter::GetForegroundInterpreter().GetState().wait_movement ? "(W) " : ""));
-				skip_items = 1;
-				count_items = 1;
-			}
-			for (int i = 0; i < bg_states.CountEventInterpreters() && count_items < 10; i++) {
-				if (skip_items > 0) {
-					skip_items--;
-					continue;
+				int skip_items = range_page * 10;
+				int count_items = 0;
+				if (range_page == 0) {
+					addItem(fmt::format("{}Main", Game_Interpreter::GetForegroundInterpreter().GetState().wait_movement ? "(W) " : ""));
+					skip_items = 1;
+					count_items = 1;
 				}
-				const auto& [evt_id, state] = bg_states.GetEventInterpreter(i);
-				addItem(fmt::format("{}EV{:04d}: {}", state.wait_movement ? "(W) " : "", evt_id, Game_Map::GetEvent(evt_id)->GetName()));
-				count_items++;
-			}
-			for (int i = 0; i < bg_states.CountCommonEventInterpreters() && count_items < 10; i++) {
-				if (skip_items > 0) {
-					skip_items--;
-					continue;
+				for (int i = 0; i < static_cast<int>(state_interpreter.ev.size()) && count_items < 10; i++) {
+					if (skip_items > 0) {
+						skip_items--;
+						continue;
+					}
+					int evt_id = state_interpreter.ev[i];
+					addItem(fmt::format("{}EV{:04d}: {}", state_interpreter.state_ev[i].wait_movement ? "(W) " : "", evt_id, Game_Map::GetEvent(evt_id)->GetName()));
+					count_items++;
 				}
-				const auto& [ce_id, state] = bg_states.GetCommonEventInterpreter(i);
-				auto* ce = lcf::ReaderUtil::GetElement(lcf::Data::commonevents, ce_id);
-				addItem(fmt::format("{}CE{:04d}: {}", state.wait_movement ? "(W) " : "", ce_id, ce->name));
-				count_items++;
-			}
+				for (int i = 0; i < static_cast<int>(state_interpreter.ce.size()) && count_items < 10; i++) {
+					if (skip_items > 0) {
+						skip_items--;
+						continue;
+					}
+					int ce_id = state_interpreter.ce[i];
+					auto* ce = lcf::ReaderUtil::GetElement(lcf::Data::commonevents, ce_id);
+					addItem(fmt::format("{}CE{:04d}: {}", state_interpreter.state_ce[i].wait_movement ? "(W) " : "", ce_id, ce->name));
+					count_items++;
+				}
 		}
 		break;
 		default:
@@ -987,7 +986,7 @@ int Scene_Debug::GetLastPage() const {
 			num_elements = Main_Data::game_strings->GetSizeWithLimit();
 			break;
 		case eInterpreter:
-			num_elements = 1 + state_interpreter.background_states.Count();
+			num_elements = 1 + state_interpreter.ev.size() + state_interpreter.ce.size();
 			return (static_cast<int>(num_elements) - 1) / 10;
 		default:
 			break;
@@ -1128,11 +1127,11 @@ void Scene_Debug::DoCallCommonEvent() {
 	auto& ce = Game_Map::GetCommonEvents()[ceid - 1];
 
 	if (Game_Battle::IsBattleRunning()) {
-		Game_Battle::GetInterpreter().Push<InterpreterExecutionType::DebugCall>(&ce);
+		Game_Battle::GetInterpreter().Push(&ce);
 		Scene::PopUntil(Scene::Battle);
 		Output::Debug("Debug Scene Forced execution of common event {} on the battle foreground interpreter.", ce.GetIndex());
 	} else {
-		Game_Map::GetInterpreter().Push<InterpreterExecutionType::DebugCall>(&ce);
+		Game_Map::GetInterpreter().Push(&ce);
 		Scene::PopUntil(Scene::Map);
 		Output::Debug("Debug Scene Forced execution of common event {} on the map foreground interpreter.", ce.GetIndex());
 	}
@@ -1157,11 +1156,11 @@ void Scene_Debug::DoCallMapEvent() {
 	}
 
 	if (Game_Battle::IsBattleRunning()) {
-		Game_Battle::GetInterpreter().Push<InterpreterExecutionType::DebugCall>(me, page);
+		Game_Battle::GetInterpreter().Push(me, page, false);
 		Scene::PopUntil(Scene::Battle);
 		Output::Debug("Debug Scene Forced execution of map event {} page {} on the battle foreground interpreter.", me->GetId(), page->ID);
 	} else {
-		Game_Map::GetInterpreter().Push<InterpreterExecutionType::DebugCall>(me, page);
+		Game_Map::GetInterpreter().Push(me, page, false);
 		Scene::PopUntil(Scene::Map);
 		Output::Debug("Debug Scene Forced execution of map event {} page {} on the map foreground interpreter.", me->GetId(), page->ID);
 	}
@@ -1185,9 +1184,9 @@ void Scene_Debug::DoCallBattleEvent() {
 
 	auto& page = troop->pages[page_idx];
 
-	Game_Battle::GetInterpreter().Push<InterpreterExecutionType::DebugCall, InterpreterEventType::BattleEvent>(page.event_commands, 0, false);
+	Game_Battle::GetInterpreter().Push(page.event_commands, 0, false);
 	Scene::PopUntil(Scene::Battle);
-	Output::Debug("Debug Scene Forced execution of battle troop {} event page {} on the battle foreground interpreter.", troop->ID, page.ID);
+	Output::Debug("Debug Scene Forced execution of battle troop {} event page {} on the map foreground interpreter.", troop->ID, page.ID);
 }
 
 void Scene_Debug::DoOpenMenu() {
@@ -1218,28 +1217,52 @@ void Scene_Debug::UpdateArrows() {
 	range_window->SetRightArrow(show_right_arrow && arrow_visible);
 }
 
+void Scene_Debug::CacheBackgroundInterpreterStates() {
+	state_interpreter.ev.clear();
+	state_interpreter.ce.clear();
+	state_interpreter.state_ev.clear();
+	state_interpreter.state_ce.clear();
+
+	if (Game_Map::GetMapId() > 0) {
+		for (auto& ev : Game_Map::GetEvents()) {
+			if (ev.GetTrigger() != lcf::rpg::EventPage::Trigger_parallel || !ev.interpreter)
+				continue;
+			state_interpreter.ev.emplace_back(ev.GetId());
+			state_interpreter.state_ev.emplace_back(ev.interpreter->GetState());
+		}
+		for (auto& ce : Game_Map::GetCommonEvents()) {
+			if (ce.IsWaitingBackgroundExecution(false)) {
+				state_interpreter.ce.emplace_back(ce.common_event_id);
+				state_interpreter.state_ce.emplace_back(ce.interpreter->GetState());
+			}
+		}
+	} else if (Game_Battle::IsBattleRunning() && Player::IsPatchManiac()) {
+		//Not implemented: battle common events
+	}
+}
+
 void Scene_Debug::UpdateInterpreterWindow(int index) {
-	lcf::rpg::SaveEventExecState state_display;
+	lcf::rpg::SaveEventExecState state;
 	std::string first_line = "";
 	bool valid = false;
-
-	auto& bg_states = state_interpreter.background_states;
+	int evt_id = 0;
 
 	if (index == 1) {
-		state_display = Game_Interpreter::GetForegroundInterpreter().GetState();
+		state = Game_Interpreter::GetForegroundInterpreter().GetState();
 		first_line = Game_Battle::IsBattleRunning() ? "Foreground (Battle)" : "Foreground (Map)";
 		valid = true;
-	} else if (index <= bg_states.CountEventInterpreters()) {
-		const auto& [evt_id, state] = bg_states.GetEventInterpreter(index - 1);
-		first_line = Debug::FormatEventName(*Game_Map::GetEvent(evt_id));
-		state_display = state;
+	} else if (index <= static_cast<int>(state_interpreter.ev.size())) {
+		evt_id = state_interpreter.ev[index - 1];
+		state = state_interpreter.state_ev[index - 1];
+		first_line = fmt::format("EV{:04d}: {}", evt_id, Game_Map::GetEvent(evt_id)->GetName());
 		valid = true;
-	} else if ((index - bg_states.CountEventInterpreters()) <= bg_states.CountCommonEventInterpreters()) {
-		const auto& [ce_id, state] = bg_states.GetCommonEventInterpreter(index - bg_states.CountEventInterpreters() - 1);
-		state_display = state;
+	} else if ((index - state_interpreter.ev.size()) <= state_interpreter.ce.size()) {
+		int ce_id = state_interpreter.ce[index - state_interpreter.ev.size() - 1];
+		state = state_interpreter.state_ce[index - state_interpreter.ev.size() - 1];
 		for (auto& ce : Game_Map::GetCommonEvents()) {
-			if (ce.GetId() == ce_id) {
-				first_line = Debug::FormatEventName(ce);
+			if (ce.common_event_id == ce_id) {
+				first_line = fmt::format("CE{:04d}: {}", ce_id, ce.GetName());
+				evt_id = ce_id;
 				valid = true;
 				break;
 			}
@@ -1248,39 +1271,36 @@ void Scene_Debug::UpdateInterpreterWindow(int index) {
 
 	if (valid) {
 		state_interpreter.selected_state = index;
-		interpreter_window->SetStackState(first_line, state_display);
+		interpreter_window->SetStackState(index > static_cast<int>(state_interpreter.ev.size()), evt_id, first_line, state);
 	} else {
 		state_interpreter.selected_state = -1;
-		interpreter_window->SetStackState("", {});
+		interpreter_window->SetStackState(0, 0, "", {});
 	}
 }
 
-lcf::rpg::SaveEventExecFrame const& Scene_Debug::GetSelectedInterpreterFrameFromUiState() const {
+lcf::rpg::SaveEventExecFrame& Scene_Debug::GetSelectedInterpreterFrameFromUiState() const {
 	static lcf::rpg::SaveEventExecFrame empty;
 
 	if (state_interpreter.selected_state <= 0 || state_interpreter.selected_frame < 0) {
 		return empty;
 	}
 
-	Game_Interpreter_Inspector inspector;
-
 	int index = state_interpreter.selected_state;
-	const auto& bg_states = state_interpreter.background_states;
 
 	if (index == 1) {
-		auto const& state = inspector.GetForegroundExecState();
+		auto& state = Game_Interpreter::GetForegroundInterpreter()._state;
 		return state.stack[state_interpreter.selected_frame];
-	} else if (index <= bg_states.CountEventInterpreters()) {
-		int evt_id = std::get<0>(bg_states.GetEventInterpreter(index - 1));
+	} else if (index <= static_cast<int>(state_interpreter.ev.size())) {
+		int evt_id = state_interpreter.ev[index - 1];
 		auto ev = Game_Map::GetEvent(evt_id);
 
-		auto const& state = inspector.GetExecState(*ev);
+		auto& state = ev->interpreter->_state;
 		return state.stack[state_interpreter.selected_frame];
-	} else if ((index - bg_states.CountEventInterpreters()) <= bg_states.CountCommonEventInterpreters()) {
-		int ce_id = std::get<0>(bg_states.GetEventInterpreter(index - bg_states.CountEventInterpreters() - 1));
+	} else if ((index - state_interpreter.ev.size()) <= state_interpreter.ce.size()) {
+		int ce_id = state_interpreter.ce[index - state_interpreter.ev.size() - 1];
 		for (auto& ce : Game_Map::GetCommonEvents()) {
-			if (ce.GetId() == ce_id) {
-				auto const& state = inspector.GetExecState(ce);
+			if (ce.common_event_id == ce_id) {
+				auto& state = ce.interpreter->_state;
 				return state.stack[state_interpreter.selected_frame];
 			}
 		}

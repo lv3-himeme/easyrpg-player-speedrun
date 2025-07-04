@@ -1,0 +1,29 @@
+23456 ICON "D:/EasyRPG/Player-0.8.1.1/resources/windows/player.ico"
+#if defined(__MINGW32__) || defined(__CYGWIN__)
+1 24 "D:/EasyRPG/Player-0.8.1.1/resources/windows/player.xml"
+#endif
+1 VERSIONINFO
+FILEVERSION 0,8,1,1
+PRODUCTVERSION 0,8,1,1
+FILETYPE 0x00000001L
+{
+	BLOCK "StringFileInfo"
+	{
+		BLOCK "000004E4"
+		{
+			VALUE "Comments", "https://easyrpg.org"
+			VALUE "CompanyName", "EasyRPG Project"
+			VALUE "FileVersion", "0.8.1.1"
+			VALUE "FileDescription", "EasyRPG Player"
+			VALUE "InternalName", "easyrpg-player"
+			VALUE "LegalCopyright", "2007-2025 EasyRPG Project"
+			VALUE "OriginalFilename", "Player.exe"
+			VALUE "ProductName", "EasyRPG Player"
+			VALUE "ProductVersion", "0.8.1.1"
+		}
+	}
+	BLOCK "VarFileInfo"
+	{
+		VALUE "Translation", 0x0000, 1252
+	}
+}

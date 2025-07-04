@@ -107,7 +107,7 @@ void Window_SaveFile::Refresh() {
 	contents->TextDraw(4 + Text::GetSize(*Font::Default(), GetSaveFileName()).width + Text::GetSize(*Font::Default(), " ").width / 2, 2, fc, out.str());
 
 	if (corrupted) {
-		contents->TextDraw(4, 16 + 2, Font::ColorKnockout, "Savegame corrupted");
+		contents->TextDraw(4, 16 + 2, Font::ColorKnockout, "Tệp tin lưu game đã bị hỏng");
 		return;
 	}
 

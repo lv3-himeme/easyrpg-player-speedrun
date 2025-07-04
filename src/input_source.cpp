@@ -44,7 +44,7 @@ std::unique_ptr<Input::Source> Input::Source::Create(
 		if (*log_src) {
 			return log_src;
 		}
-		Output::Error("Failed to open file for input replaying: {}", path);
+		Output::Error("Không thể mở tệp phát lại phím: {}", path);
 	}
 
 	return std::make_unique<Input::UiSource>(cfg, std::move(directions));
@@ -87,7 +87,7 @@ Input::LogSource::LogSource(const char* log_path, const Game_ConfigInput& cfg, D
 	log_file(FileFinder::Root().OpenInputStream(log_path, std::ios::in))
 {
 	if (!log_file) {
-		Output::Error("Error reading input logfile {}", log_path);
+		Output::Error("Không thể đọc tệp tin nhật ký phím {}", log_path);
 		return;
 	}
 
@@ -99,7 +99,7 @@ Input::LogSource::LogSource(const char* log_path, const Game_ConfigInput& cfg, D
 		if (StartsWith(ver, "V 2")) {
 			version = 2;
 		} else {
-			Output::Error("Unsupported logfile version {}", ver);
+			Output::Error("Phiên bản tệp tin nhật ký không được hỗ trợ {}", ver);
 		}
 	} else {
 		Output::Debug("Using legacy inputlog format");
@@ -154,7 +154,7 @@ bool Input::Source::InitRecording(const std::string& record_to_path) {
 		record_log = std::make_unique<Filesystem_Stream::OutputStream>(FileFinder::Root().OpenOutputStream(path, std::ios::out | std::ios::trunc));
 
 		if (!record_log) {
-			Output::Error("Failed to open file {} for input recording : {}", path, strerror(errno));
+			Output::Error("Không thể mở tệp tin {} để ghi nhật ký phím: {}", path, strerror(errno));
 			return false;
 		}
 

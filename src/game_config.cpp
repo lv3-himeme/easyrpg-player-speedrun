@@ -205,9 +205,9 @@ FilesystemView Game_Config::GetGlobalConfigFilesystem() {
 
 	auto print_err = [&path]() {
 		if (path.empty()) {
-			Output::Warning("Could not determine config path");
+			Output::Warning("Không thể xác định đường dẫn tệp tin cài đặt");
 		} else {
-			Output::Warning("Could not access config path {}", path);
+			Output::Warning("Không thể truy cập tệp tin cài đặt {}", path);
 		}
 	};
 
@@ -248,7 +248,7 @@ FilesystemView Game_Config::GetSoundfontFilesystem() {
 	}
 
 	if (!FileFinder::Root().MakeDirectory(path, true)) {
-		Output::Warning("Could not create soundfont path {}", path);
+		Output::Warning("Không thể tạo đường dẫn soundfont {}", path);
 		return {};
 	}
 
@@ -263,7 +263,7 @@ FilesystemView Game_Config::GetFontFilesystem() {
 	}
 
 	if (!FileFinder::Root().MakeDirectory(path, true)) {
-		Output::Warning("Could not create fount path {}", path);
+		Output::Warning("Không thể tạo đường dẫn phông chữ {}", path);
 		return {};
 	}
 
@@ -332,9 +332,9 @@ Filesystem_Stream::OutputStream& Game_Config::GetLogFileOutput() {
 
 		auto print_err = [&path]() {
 			if (path.empty()) {
-				Output::Warning("Could not determine logfile path");
+				Output::Warning("Không thể xác định đường dẫn tệp tin nhật ký");
 			} else {
-				Output::Warning("Could not access logfile path {}", path);
+				Output::Warning("Không thể truy cập tệp tin nhật ký {}", path);
 			}
 		};
 
@@ -354,7 +354,7 @@ Filesystem_Stream::OutputStream& Game_Config::GetLogFileOutput() {
 		logging.handle = FileFinder::Root().OpenOutputStream(path, std::ios_base::out | std::ios_base::app);
 
 		if (!logging.handle) {
-			Output::Warning("Could not open logfile {}", path);
+			Output::Warning("Không thể mở tệp tin nhật ký {}", path);
 			return logging.handle;
 		}
 

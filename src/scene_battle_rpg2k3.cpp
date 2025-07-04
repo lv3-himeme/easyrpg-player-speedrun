@@ -1870,9 +1870,7 @@ Scene_Battle_Rpg2k3::SceneActionReturn Scene_Battle_Rpg2k3::ProcessSceneActionVi
 
 		for (auto* actor: Main_Data::game_party->GetActors()) {
 			if (actor->Exists()) {
-				int exp_gain = exp;
-				RuntimePatches::EXPlus::ModifyExpGain(*actor, exp_gain);
-				actor->ChangeExp(actor->GetExp() + exp_gain, &pm);
+				actor->ChangeExp(actor->GetExp() + exp, &pm);
 			}
 		}
 

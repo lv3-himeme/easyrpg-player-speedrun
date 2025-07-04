@@ -512,9 +512,9 @@ void NxUi::vGetConfig(Game_ConfigVideo& cfg) const {
 
 	if (is_docked) {
 		cfg.touch_ui.SetLocked(true);
-		cfg.touch_ui.SetDescription("Only available in handheld mode");
+		cfg.touch_ui.SetDescription("Chỉ khả dụng ở chế độ tay cầm");
 	} else if (cfg.stretch.Get()) {
 		cfg.touch_ui.SetLocked(true);
-		cfg.touch_ui.SetDescription("Not available when stretch is enabled");
+		cfg.touch_ui.SetDescription("Không khả dụng khi bật tuỳ chọn kéo dãn");
 	}
 }

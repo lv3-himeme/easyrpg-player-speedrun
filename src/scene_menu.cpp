@@ -147,10 +147,10 @@ void Scene_Menu::CreateCommandWindow() {
 			options.push_back(ToString(Main_Data::game_system->GetAtbMode() == lcf::rpg::SaveSystem::AtbMode_atb_wait ? lcf::Data::terms.wait_on : lcf::Data::terms.wait_off));
 			break;
 		case Settings:
-			options.push_back("Settings");
+			options.push_back("Cài đặt");
 			break;
 		case Debug:
-			options.push_back("Debug");
+			options.push_back("Gỡ lỗi");
 			break;
 		default:
 			options.push_back(ToString(lcf::Data::terms.menu_quit));

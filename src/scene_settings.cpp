@@ -63,20 +63,20 @@ void Scene_Settings::CreateTitleGraphic() {
 void Scene_Settings::CreateMainWindow() {
 	root_options.clear();
 	root_options.insert(root_options.end(), {
-		{ Window_Settings::eVideo,	"Video" },
-		{ Window_Settings::eAudio,	"Audio" },
-		{ Window_Settings::eInput,	"Input"},
-		{ Window_Settings::eEngine,	"Engine"},
-		{ Window_Settings::eLicense,"License"},
-		{ Window_Settings::eSave,	"<Save Settings>"}
+		{ Window_Settings::eVideo,	"Hình ảnh" },
+		{ Window_Settings::eAudio,	"Âm thanh" },
+		{ Window_Settings::eInput,	"Điều khiển"},
+		{ Window_Settings::eEngine,	"Phần mềm"},
+		{ Window_Settings::eLicense,"Giấy phép"},
+		{ Window_Settings::eSave,	"<Lưu cài đặt>"}
 	});
 
 	if (Player::translation.HasTranslations() && Scene::Peek()->type != Scene::Title && Scene::Peek()->type != Scene::LanguageMenu) {
-		root_options.insert(root_options.begin() + 3, { Window_Settings::eLanguage, "Language" });
+		root_options.insert(root_options.begin() + 3, { Window_Settings::eLanguage, "Ngôn ngữ" });
 	}
 
 	if (Scene::Find(Scene::Title)) {
-		root_options.insert(root_options.end(), { Window_Settings::eEnd, "<Exit Game>" });
+		root_options.insert(root_options.end(), { Window_Settings::eEnd, "<Thoát game>" });
 	}
 
 	std::vector<std::string> options;
@@ -109,18 +109,18 @@ void Scene_Settings::CreateOptionsWindow() {
 	input_window = std::make_unique<Window_InputSettings>(Player::menu_offset_x, 32, MENU_WIDTH, Player::screen_height - 32 * 3);
 	input_window->SetHelpWindow(help_window.get());
 
-	std::vector<std::string> input_mode_items = {"Add", "Remove", "Reset"};
+	std::vector<std::string> input_mode_items = {"Thêm", "Xoá", "Đặt lại"};
 	input_mode_window = std::make_unique<Window_Command_Horizontal>(input_mode_items, MENU_WIDTH - 32 * 2);
 	input_mode_window->SetX(Player::menu_offset_x + 32);
 	input_mode_window->SetY(Player::screen_height - 32);
 	input_mode_window->SetHelpWindow(help_window.get());
 	input_mode_window->UpdateHelpFn = [](Window_Help& win, int index) {
 		if (index == 0) {
-			win.SetText("Add a new keybinding");
+			win.SetText("Thêm một phím mới");
 		} else if (index == 1) {
-			win.SetText("Remove a keybinding");
+			win.SetText("Xoá một phím");
 		} else if (index == 2) {
-			win.SetText("Reset the keybindings to the default");
+			win.SetText("Đặt lại cài đặt phím về mặc định");
 		}
 	};
 
@@ -175,7 +175,7 @@ void Scene_Settings::SetMode(Window_Settings::UiMode new_mode) {
 			input_mode_window->SetActive(true);
 			input_mode_window->SetVisible(true);
 			input_help_window->SetVisible(true);
-			input_help_window->SetText("Emergency reset: Hold 4 keys and follow instructions");
+			input_help_window->SetText("Đặt lại khẩn cấp: Giữ 4 phím và làm theo hướng dẫn");
 			RefreshInputActionAllowed();
 			break;
 		case Window_Settings::eInputButtonAdd:
@@ -184,7 +184,7 @@ void Scene_Settings::SetMode(Window_Settings::UiMode new_mode) {
 			input_window->SetInputButton(static_cast<Input::InputButton>(options_window->GetFrame().arg));
 			input_mode_window->SetVisible(true);
 			input_help_window->SetVisible(true);
-			input_help_window->SetText("Press a key to bind. To abort the mapping wait 3 seconds");
+			input_help_window->SetText("Nhấn một phím bất kì để gán. Để hủy thao tác gán phím, hãy chờ 3 giây");
 			break;
 		case Window_Settings::eInputButtonRemove:
 			help_window->SetVisible(true);
@@ -193,7 +193,7 @@ void Scene_Settings::SetMode(Window_Settings::UiMode new_mode) {
 			input_window->SetIndex(0);
 			input_mode_window->SetVisible(true);
 			input_help_window->SetVisible(true);
-			input_help_window->SetText("Select the keybinding you want to remove");
+			input_help_window->SetText("Chọn một phím bạn muốn xoá");
 			break;
 		case Window_Settings::eAbout:
 			about_window->SetVisible(true);
@@ -391,7 +391,7 @@ void Scene_Settings::UpdateOptions() {
 				number_window->SetZ(options_window->GetZ() + 1);
 				number_window->SetOpacity(255);
 				number_window->SetActive(true);
-				help_window->SetText(fmt::format("Input a value from {} to {}", option.min_value, option.max_value));
+				help_window->SetText(fmt::format("Nhập một giá trị từ {} đến {}", option.min_value, option.max_value));
 				options_window->SetActive(false);
 			} else if (option.mode == Window_Settings::eOptionPicker) {
 				picker_window.reset(new Window_Command(option.options_text));
@@ -515,7 +515,7 @@ void Scene_Settings::UpdateFont(bool mincho) {
 			} else {
 				auto& opt = options_window->GetCurrentOption();
 				opt.action = nullptr;
-				opt.value_text = "[Broken]";
+				opt.value_text = "[Hỏng]";
 				opt.help2.clear();
 				options_window->DrawOption(options_window->GetIndex());
 			}
@@ -604,29 +604,29 @@ void Scene_Settings::UpdateButtonRemove() {
 bool Scene_Settings::RefreshInputEmergencyReset() {
 	if (Input::GetAllRawPressed().count() >= 4) {
 		if (input_reset_counter == 0) {
-			Output::InfoStr("Input emergency reset started");
-			Output::InfoStr("Hold the keys for 3 seconds");
+			Output::InfoStr("Đặt lại khẩn cấp các phím điều khiển đã bắt đầu");
+			Output::InfoStr("Giữ các phím trong 3 giây");
 		}
 		input_reset_counter++;
 
 		if (input_reset_counter == Game_Clock::GetTargetGameFps() * 3) {
 			if (input_window->GetInputButton() == Input::InputButton::BUTTON_COUNT) {
 				// No last button yet: reset everything
-				Output::InfoStr("All buttons reset to default");
+				Output::InfoStr("Toàn bộ các phím đã được đặt lại");
 				if (input_window->GetActive()) {
 					input_window->SetIndex(0);
 				}
 				Input::ResetAllMappings();
 			} else {
-				Output::Info("Button {} reset to default", Input::kInputButtonNames.tag(input_window->GetInputButton()));
-				Output::Info("To reset all buttons hold 3 seconds longer");
+				Output::Info("Phím {} đã được đặt lại", Input::kInputButtonNames.tag(input_window->GetInputButton()));
+				Output::Info("Để đặt lại tất cả phím hãy giữ thêm 3 giây");
 				if (input_window->GetActive()) {
 					input_window->SetIndex(0);
 				}
 				input_window->ResetMapping();
 			}
 		} else if (input_reset_counter == Game_Clock::GetTargetGameFps() * 6) {
-			Output::InfoStr("All buttons reset to default");
+			Output::InfoStr("Toàn bộ các phím đã được đặt lại");
 			if (input_window->GetActive()) {
 				input_window->SetIndex(0);
 			}
@@ -634,7 +634,7 @@ bool Scene_Settings::RefreshInputEmergencyReset() {
 		}
 	} else {
 		if (input_reset_counter > 0) {
-			Output::InfoStr("Input emergency reset ended");
+			Output::InfoStr("Quá trình đặt lại khẩn cấp đã kết thúc");
 			input_reset_counter = 0;
 		}
 	}
@@ -656,7 +656,7 @@ bool Scene_Settings::SaveConfig(bool silent) {
 		if (silent) {
 			Output::Debug("Saving configuration file failed!");
 		} else {
-			Output::Warning("Saving configuration file failed!");
+			Output::Warning("Không thể lưu tệp tin cài đặt!");
 		}
 		return false;
 	}
@@ -674,7 +674,7 @@ bool Scene_Settings::SaveConfig(bool silent) {
 	if (silent) {
 		Output::Debug("Configuration saved to {}", cfg_out.GetName());
 	} else {
-		Output::Info("Configuration saved to {}", cfg_out.GetName());
+		Output::Info("Đã lưu cài đặt vào tệp tin {}", cfg_out.GetName());
 	}
 
 	return true;

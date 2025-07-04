@@ -164,8 +164,8 @@ DirectoryTree::DirectoryListType* DirectoryTree::ListDirectory(std::string_view 
 
 		if (entry.type == FileType::Directory) {
 			if (Find(fs_cache_entry, new_entry_key) != fs_cache_entry.end()) {
-				Output::Warning("The folder \"{}\" exists twice.", entry.name);
-				Output::Warning("This can lead to file not found errors. Merge the directories manually in a file browser.");
+				Output::Warning("Thư mục \"{}\" xuất hiện hai lần.", entry.name);
+				Output::Warning("Điều này có thể dẫn đến lỗi không tìm thấy tệp. Hãy gộp các thư mục theo cách thủ công bằng trình quản lý tệp.");
 			}
 		}
 		fs_cache_entry.emplace_back(std::make_pair(std::move(new_entry_key), entry));

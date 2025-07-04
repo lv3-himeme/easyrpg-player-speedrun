@@ -75,7 +75,7 @@ FilesystemView FileFinder::Save() {
 	if (save_fs) {
 		// This means the save filesystem was overwritten
 		if (!save_fs.IsFeatureSupported(Filesystem::Feature::Write)) {
-			Output::Error("{} is not a valid save path (not writable)", GetFullFilesystemPath(save_fs));
+			Output::Error("{} không phải là tệp tin lưu game hợp lệ (không thể ghi được)", GetFullFilesystemPath(save_fs));
 		}
 		return save_fs;
 	}
@@ -109,7 +109,7 @@ FilesystemView FileFinder::Save() {
 				redir = parent.Subtree(save_path);
 
 				if (!redir) {
-					Output::Error("Invalid save directory {}", save_path);
+					Output::Error("Thư mục lưu game không hợp lệ {}", save_path);
 				}
 
 				break;
@@ -117,7 +117,7 @@ FilesystemView FileFinder::Save() {
 		}
 
 		if (!redir) {
-			Output::Error("No suitable save directory found");
+			Output::Error("Không tìm được thư mục lưu game phù hợp");
 		}
 
 		return redir;

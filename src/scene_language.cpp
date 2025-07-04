@@ -61,9 +61,9 @@ void Scene_Language::CreateTitleGraphic() {
 void Scene_Language::CreateTranslationWindow() {
 	// Build a list of 'Default' and all known languages.
 	std::vector<std::string> lang_names;
-	lang_names.push_back("Default Language");
+	lang_names.push_back("Ngôn ngữ mặc định");
 	lang_dirs.push_back("");
-	lang_helps.push_back("Play the game in its original language.");
+	lang_helps.push_back("Chơi trò chơi ở ngôn ngữ mặc định.");
 
 	// Push menu entries with the display name, but also save the directory location and help text.
 	for (const Language& lg : Player::translation.GetLanguages()) {

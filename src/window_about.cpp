@@ -32,17 +32,17 @@ Window_About::Window_About(int ix, int iy, int iwidth, int iheight) :
 
 void Window_About::Refresh() {
 	std::vector<std::string> about_msg = {
-		"EasyRPG Player is a RPG Maker 2000/2003",
-		"interpreter.",
-		"Licensed under the GPLv3.",
-		"",
+		"EasyRPG Player là một trình chơi các trò",
+		"chơi RPG Maker 2000/2003.",
+		"Được cấp phép bằng giấy phép GPLv3.",
 		"v" + Version::GetVersionString(true, true),
 		"",
-		"Website: easyrpg.org",
-		"Contact us: easyrpg.org/contact",
+		"Được Việt hóa bởi The Firefly Project.",
 		"",
-		"Bugs: github.com/EasyRPG/Player/issues",
-		"Contribute: easyrpg.org/contribute",
+		"Website: easyrpg.org",
+		"Liên hệ EasyRPG: easyrpg.org/contact",
+		"Báo lỗi: github.com/EasyRPG/Player/issues",
+		"Đóng góp: easyrpg.org/contribute",
 	};
 
 	for (size_t i = 0; i < about_msg.size(); ++i) {

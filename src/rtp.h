@@ -50,8 +50,7 @@ namespace RTP {
 		RPG2003_VladRussian,
 		RPG2003_RpgUniverseSpanishPortuguese,
 		RPG2003_Korean,
-		RPG2003_OfficialTraditionalChinese,
-		LAST
+		RPG2003_OfficialTraditionalChinese
 	};
 
 	constexpr auto kTypes = lcf::makeEnumTags<Type>(
@@ -67,7 +66,6 @@ namespace RTP {
 		"Korean Translation",
 		"Official Traditional Chinese"
 	);
-	static_assert(kTypes.size() == static_cast<size_t>(Type::LAST));
 
 	struct RtpHitInfo {
 		RTP::Type type;

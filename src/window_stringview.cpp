@@ -147,22 +147,22 @@ void Window_StringView::DrawCmdLines() {
 	Rect rect = GetItemRect(0);
 	contents->ClearRect(rect);
 
-	contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Automatic line break: ");
-	contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, auto_linebreak ? "[ON]" : "[OFF]", Text::AlignRight);
+	contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Tự động xuống dòng: ");
+	contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, auto_linebreak ? "[BẬT]" : "[TẮT]", Text::AlignRight);
 
 	rect = GetItemRect(1);
 	contents->ClearRect(rect);
 
-	contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Command evaluation: ");
-	contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, cmd_eval ? "[ON]" : "[OFF]", Text::AlignRight);
+	contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Thực thi lệnh: ");
+	contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, cmd_eval ? "[BẬT]" : "[TẮT]", Text::AlignRight);
 
 #ifdef HAVE_NLOHMANN_JSON
 	if (this->json_data) {
 		rect = GetItemRect(2);
 		contents->ClearRect(rect);
 
-		contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Pretty Print: ");
-		contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, pretty_print ? "[ON]" : "[OFF]", Text::AlignRight);
+		contents->TextDraw(rect.x, rect.y, Font::ColorHeal, "Định dạng đẹp: ");
+		contents->TextDraw(GetWidth() - 16, rect.y, Font::ColorCritical, pretty_print ? "[BẬT]" : "[TẮT]", Text::AlignRight);
 	}
 #endif
 }

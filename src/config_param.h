@@ -44,7 +44,7 @@ namespace {
 	}
 
 	inline std::string ParamValueToString(bool b) {
-		return b ? "[ON]" : "[OFF]";
+		return b ? "[BẬT]" : "[TẮT]";
 	}
 }
 

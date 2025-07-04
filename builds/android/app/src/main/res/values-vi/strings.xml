@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--GameBrowser Activity-->
+    <string name="app_name" translatable="false">EasyRPG Player</string>
+    <string name="autodetect">Tự động phát hiện vùng (Khuyến nghị)</string>
+    <string name="west_europe">Tây Âu</string>
+    <string name="east_europe">Trung/Đông Âu</string>
+    <string name="cyrillic">Chữ Kirin</string>
+    <string name="japan">Nhật Bản</string>
+    <string name="korean">Hàn Quốc</string>
+    <string name="chinese_simple">Trung Quốc (Giản thể)</string>
+    <string name="chinese_traditional">Trung Quốc (Phồn thể)</string>
+    <string name="greek">Hy Lạp</string>
+    <string name="turkish">Thổ Nhĩ Kỳ</string>
+    <string name="hebrew">Do Thái</string>
+    <string name="arabic">Ả Rập</string>
+    <string name="baltic">Ngôn ngữ Baltic</string>
+    <string name="thai">Thái Lan</string>
+    <string name="vietnamese">Việt Nam</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Hủy bỏ</string>
+    <string name="do_want_quit">Bạn có chắc chắn muốn thoát không?</string>
+    <string name="do_want_reset">Bạn có chắc chắn muốn đặt lại không?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+    <string name="revert">Hoàn tác</string>
+    <string name="creating_dir_failed">Không thể tạo thư mục $PATH</string>
+    <string name="path_not_readable">$PATH không thể đọc được</string>
+    <string name="no_games_found_and_explanation_android_30">Không tìm thấy game RPG Maker 2000/2003.\n\nThư mục EasyRPG bạn chọn có chứa thư mục \"games\". Hãy sử dụng trình quản lý tệp để cho game của bạn vào thư mục này.\nGame có thể nằm trong thư mục con hoặc trong tệp ZIP/LZH.\n\nBạn có thể thay đổi thư mục EasyRPG trong phần cài đặt.</string>
+    <string name="open_games_folder">Mở thư mục \"games\"</string>
+    <string name="no_external_storage">Không tìm thấy bộ nhớ ngoài (ví dụ: thẻ SD)</string>
+    <string name="not_valid_game">$PATH không phải là game hợp lệ</string>
+    <string name="select_game_region">Chọn vùng của game</string>
+    <string name="change_the_layout">Thay đổi bố cục</string>
+    <string name="launch_debug_mode">Chạy ở chế độ gỡ lỗi</string>
+    <string name="game_rename">Đổi tên game</string>
+    <string name="open_save_folder">Mở thư mục lưu game</string>
+    <string name="choose_layout">Chọn bố cục</string>
+    <string name="unknown_region">Vùng không xác định</string>
+    <string name="region_modification_failed">Thay đổi vùng thất bại</string>
+    <string name="refresh">Làm mới</string>
+    <string name="change_default_mapping">Thay đổi sơ đồ nút mặc định</string>
+    <string name="how_to_use_easy_rpg">Cách sử dụng EasyRPG Player</string>
+    <string name="how_to_use_easy_rpg_explanation_android_30">Hãy cho game RPG Maker 2000/2003 của bạn vào thư mục con trong thư mục \"games\".\nGame cần được giải nén hoặc ở dạng ZIP/LZH.\nKHÔNG hỗ trợ các định dạng RAR, 7z và EXE.\n\nCác tính năng tùy chọn (xem trong phần cài đặt):\n- Có thể thêm RTP (tài nguyên dùng chung cho một số game)\n- Có thể thêm soundfont tùy chỉnh để thay đổi âm thanh MIDI</string>
+    <string name="visit_website">Truy cập trang web của chúng tôi</string>
+    <string name="watch_explanation_video">Bắt đầu và thêm game (Hướng dẫn bằng video tiếng Anh)</string>
+    <string name="error_no_games_folder">Thư mục \"games\" không tồn tại hoặc không phải là một thư mục. Hãy tạo thủ công hoặc chọn một vị trí khác cho thư mục EasyRPG. Có thể thay đổi thư mục EasyRPG trong phần cài đặt.</string>
+    <string name="error_games_no_rw">Thư mục \"games\" không thể đọc hoặc ghi. Hãy chọn vị trí khác cho thư mục EasyRPG. Có thể thay đổi trong phần cài đặt.</string>
+    <string name="error_saf_title">Đã chọn thư mục không hợp lệ</string>
+    <string name="error_saf_select_easyrpg">Hãy tạo một thư mục EasyRPG trống và chọn nó.</string>
+    <string name="error_saf_download_selected">Không thể sử dụng thư mục Download làm thư mục EasyRPG.</string>
+    <string name="error_saf_folder_not_empty">Thư mục đã chọn chứa các tệp khác và không thể dùng làm thư mục EasyRPG. Hãy xóa hết tệp bên trong để sử dụng thư mục này.</string>
+    <string name="error_saf_bad_content_provider">Không thể sử dụng thư mục đã chọn làm thư mục EasyRPG. Vấn đề này có thể xảy ra do nhiều lý do, ví dụ như chọn thư mục gốc hoặc vị trí lưu trữ đám mây.</string>
+    <string name="view">Xem</string>
+    <string name="view_show_title_desc">Chọn cách hiển thị tên game</string>
+    <string name="view_show_game_title">Dùng tên trong game</string>
+    <string name="view_show_game_folder">Dùng tên thư mục</string>
+
+    <!--Ingame menu-->
+    <string name="toggle_ui">Bật/tắt nút bấm ảo</string>
+    <string name="toggle_fps">Bật/tắt hiển thị FPS</string>
+    <string name="reset_game">Khởi động lại game</string>
+    <string name="end_game">Kết thúc game</string>
+    <string name="report_bug">Báo lỗi</string>
+    <string name="report_bug_msg">Chức năng này sẽ mở ứng dụng email của bạn (ví dụ như Gmail) để gửi báo cáo lỗi cho chúng tôi.\n\nNếu bạn không muốn gửi email hoặc không có ứng dụng email, hãy tạo vấn đề mới tại https://github.com/EasyRPG/Player/issues</string>
+    <string name="report_bug_mail">Cảm ơn bạn đã ủng hộ EasyRPG Player.\n
+Một tệp nhật ký và dữ liệu lưu game đã được đính kèm.\n
+Vui lòng không xóa tệp nhật ký! Chúng tôi cần tệp lưu game gần với vị trí xảy ra lỗi.\n
+Hãy mô tả chi tiết những gì đã xảy ra.\n\n</string>
+
+    <!--Settings Activities-->
+    <string name="video">Hình ảnh</string>
+    <string name="audio">Âm thanh</string>
+    <string name="input">Điều khiển</string>
+    <string name="font">Phông chữ</string>
+    <string name="easyrpg_folders">Thư mục EasyRPG</string>
+    <string name="settings">Cài đặt</string>
+    <string name="screen_size">Tỷ lệ màn hình:</string>
+    <string name="fullscreen_mode">Toàn màn hình</string>
+    <string name="force_landscape_mode">Bắt buộc xoay ngang</string>
+    <string name="scale_nearest">Phóng theo kích thước màn hình bằng phương pháp lân cận gần nhất (nhanh, chất lượng thấp)</string>
+    <string name="scale_integer">Phóng theo bội số độ phân giải (nhanh, hình ảnh nhỏ hơn nhưng chất lượng tốt)</string>
+    <string name="scale_bilinear">Phóng và làm mịn (chậm, chất lượng tốt)</string>
+    <string name="stretch">Bỏ qua tỷ lệ gốc (kéo giãn theo chiều ngang)</string>
+    <string name="settings_resolution">Độ phân giải game:</string>
+    <string name="settings_resolution_desc">Thay đổi độ phân giải có thể gây lỗi hình ảnh hoặc làm hỏng game. Bạn đã được cảnh báo trước!</string>
+    <string name="settings_resolution_original">Gốc (320x240, 4:3, Khuyến nghị)</string>
+    <string name="settings_resolution_widescreen">Màn hình rộng (416x240, 16:9, Thử nghiệm)</string>
+    <string name="settings_resolution_ultrawide">Siêu rộng (560x240, 21:9, Thử nghiệm)</string>
+    <string name="enable_vibration">Bật rung</string>
+    <string name="vibrate_when_sliding_direction">Rung khi trượt đổi hướng</string>
+    <string name="settings_custom_soundfont">Soundfont tùy chỉnh:</string>
+    <string name="open_the_sound_fonts_folder">Mở thư mục \"soundfonts\"</string>
+    <string name="settings_soundfont_explanation">Cho soundfont có định dạng SF2 vào thư mục \"soundfonts\". Soundfont sẽ thay đổi âm thanh của nhạc MIDI.</string>
+    <string name="settings_soundfont_found">Soundfont:</string>
+    <string name="settings_default_soundfont">Soundfont mặc định</string>
+    <string name="music_volume">Âm lượng nhạc nền</string>
+    <string name="sound_volume">Âm lượng hiệu ứng</string>
+    <string name="input_layout_transparency">Độ trong suốt bố cục điều khiển:</string>
+    <string name="ignore_size_settings">Bỏ qua cài đặt kích thước nút và dùng giá trị này:</string>
+    <string name="settings_input_show_ab_as_zx">Hiển thị nút A và B thành Z và X</string>
+    <string name="no_read_access_on_dir">Không có quyền đọc thư mục %1$s</string>
+    <string name="quick_access">Truy cập nhanh</string>
+    <string name="fast_forward">Chế độ tua nhanh:</string>
+    <string-array name="fast_forward_mode">
+        <item>@string/fast_forward_mode_hold</item>
+        <item>@string/fast_forward_mode_tap</item>
+    </string-array>
+    <string name="fast_forward_mode_hold">nhấn giữ</string>
+    <string name="fast_forward_mode_tap">chạm</string>
+    <string name="fast_forward_factor">Hệ số tốc độ:</string>
+    <string name="select_the_games_folder">Chọn thư mục EasyRPG</string>
+    <string name="id_select_games_folder_explanation">EasyRPG Player cần một thư mục riêng. Sau khi nhấn nút, bạn sẽ được yêu cầu chọn một thư mục.\n\nNếu đây là lần đầu sử dụng, hãy tạo thư mục EasyRPG mới rồi chọn nó.\n\nNếu bạn đã dùng ứng dụng này trước đó, hãy chọn thư mục EasyRPG hiện có.</string>
+    <string name="Loading">Đang tải…</string>
+    <string name="enable_rtp_support">Bật hỗ trợ RTP</string>
+    <string name="rtp_explanation">RTP cung cấp tài nguyên chung cho một số game.\nĐặt RTP của RPG Maker 2000 vào \"rtp/2000\" và RTP của 2003 vào \"rtp/2003\".\nLưu ý: bật RTP sẽ làm game tải lâu hơn lúc đầu.</string>
+    <string name="rtp_not_found">Không tìm thấy RTP $YEAR. Game cần RTP này sẽ thiếu tài nguyên.</string>
+    <string name="rtp_found">Tìm thấy RTP $YEAR: $NAME ($FOUND trong số $MAX tài nguyên được tìm thấy)</string>
+    <string name="open_rtp_folder">Mở thư mục \"rtp\"</string>
+    <string name="open_fonts_folder">Mở thư mục \"fonts\"</string>
+    <string name="settings_fonts_explanation">Đưa phông chữ vào thư mục \"fonts\". Nên dùng phông TTF hoặc bitmap (FON) để có kết quả tốt nhất.</string>
+    <string name="settings_fonts_explanation2">Game sẽ quyết định sử dụng phông 1 hay phông 2.</string>
+    <string name="settings_fonts_size_explanation">Thiết lập kích thước phông không có hiệu lực khi dùng phông tích hợp sẵn hoặc một số phông bitmap.</string>
+    <string name="settings_fonts_size_explanation2">Cỡ chữ phải đủ để ký tự # hiện ra ít nhất một phần. Nếu không thấy, văn bản sẽ bị cắt trong game.</string>
+    <string name="settings_font_1">Phông chữ 1:</string>
+    <string name="settings_font_2">Phông chữ 2:</string>
+    <string name="settings_font_size">Kích thước phông</string>
+    <string name="settings_font_default">Phông tích hợp</string>
+
+    <!--InputLayout Managing-->
+    <string name="manage_input_layouts">Quản lý bố cục điều khiển:</string>
+    <string name="edit_name">Sửa tên</string>
+    <string name="edit_layout">Sửa bố cục</string>
+    <string name="delete">Xóa</string>
+    <string name="default_layout">Mặc định</string>
+    <string name="horizontal_input_layout">Bố cục điều khiển ngang</string>
+    <string name="vertical_input_layout">Bố cục điều khiển dọc</string>
+    <string name="settings_edit_layout_explanation">Khi chỉnh sửa bố cục điều khiển, bạn có thể thêm nút (ví dụ nút Shift).\nĐể thêm nút, hãy nhấn nút quay lại và chọn \"Thêm nút\".</string>
+
+    <!--ButtonMapping Activity-->
+    <string name="add_a_button">Thêm nút</string>
+    <string name="reset_button_mapping">Đặt lại sơ đồ nút</string>
+    <string name="exit_without_saving">Thoát không lưu</string>
+    <string name="save_and_quit">Lưu và thoát</string>
+    <string name="key_enter">Enter (Z)</string>
+    <string name="key_cancel">Hủy (ESC và X)</string>
+    <string name="key_shift">Shift</string>
+    <string name="key_fast_forward">Tua nhanh</string>
+    <string name="key_debug_walk_through_walls">Đi xuyên tường (cần chế độ gỡ lỗi)</string>
+    <string name="key_debug_menu">Mở menu gỡ lỗi (cần chế độ gỡ lỗi)</string>
+
+    <!--GameBrowser Activity-->
+    <string name="navigation_drawer_open">Mở menu điều hướng</string>
+    <string name="navigation_drawer_close">Đóng menu điều hướng</string>
+    <string name="menu">Mở menu Android</string>
+    <string name="unsupported_engine_card">$ENGINE không được hỗ trợ</string>
+    <string name="unsupported_engine_title">Không hỗ trợ engine</string>
+    <string name="unsupported_engine_explanation">Game này không thể chơi bằng EasyRPG Player vì được tạo bằng $ENGINE.\n\nEasyRPG Player chỉ hỗ trợ game tạo bằng RPG Maker 2000 và 2003 và không có kế hoạch hỗ trợ thêm engine khác.\n\nĐể chơi game này, vui lòng tìm phần mềm tương thích trên Cửa hàng Google Play.</string>
+</resources>

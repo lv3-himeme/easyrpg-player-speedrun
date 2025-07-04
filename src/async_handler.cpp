@@ -97,18 +97,18 @@ namespace {
 		auto ctx = static_cast<async_download_context*>(userData);
 		++ctx->count;
 		if (ctx->count >= ASYNC_MAX_RETRY_COUNT) {
-			Output::Warning("DL Failure: max retries exceeded: {}", ctx->obj->GetPath());
+			Output::Warning("Tải xuống thất bại: Vượt quá giới hạn số lần tải tối đa: {}", ctx->obj->GetPath());
 			ctx->obj->DownloadDone(false);
 			delete ctx;
 			return;
 		}
 		if (status >= 400) {
-			Output::Warning("DL Failure: file not available: {}", ctx->obj->GetPath());
+			Output::Warning("Tải xuống thất bại: Không thể tìm thấy tệp tin: {}", ctx->obj->GetPath());
 			ctx->obj->DownloadDone(false);
 			delete ctx;
 			return;
 		}
-		Output::Debug("DL Failure: {}. Retrying", ctx->obj->GetPath());
+		Output::Debug("Tải xuống thất bại: {}. Đang thử lại", ctx->obj->GetPath());
 		start_async_wget_with_retry(ctx);
 	}
 

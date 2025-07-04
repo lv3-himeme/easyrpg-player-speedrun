@@ -96,18 +96,18 @@ Game_ConfigVideo BaseUi::GetConfig() const {
 	if (cfg.vsync.IsOptionVisible()
 			&& cfg.vsync.Get()) {
 		cfg.fps_limit.SetLocked(true);
-		cfg.fps_limit.SetDescription("This option requires V-Sync to be disabled");
+		cfg.fps_limit.SetDescription("Cài đặt này yêu cầu phải tắt V-Sync");
 	}
 
 	if (cfg.fullscreen.IsOptionVisible()
 			&& cfg.fullscreen.Get()) {
 		cfg.window_zoom.SetLocked(true);
-		cfg.window_zoom.SetDescription("This option requires to be in windowed mode");
+		cfg.window_zoom.SetDescription("Cài đặt này yêu cầu chế độ cửa sổ");
 	}
 
 	if (Player::has_custom_resolution) {
 		cfg.game_resolution.SetLocked(true);
-		cfg.game_resolution.SetDescription("This game uses a custom resolution");
+		cfg.game_resolution.SetDescription("Trò chơi này sử dụng độ phân giải tuỳ chỉnh");
 	}
 
 	return cfg;

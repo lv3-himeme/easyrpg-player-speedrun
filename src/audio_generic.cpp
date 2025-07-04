@@ -44,9 +44,9 @@ GenericAudio::GenericAudio(const Game_ConfigAudio& cfg) : AudioInterface(cfg) {
 	SetFormat(12345, AudioDecoder::Format::S8, 1);
 }
 
-void GenericAudio::BGM_Play(Filesystem_Stream::InputStream stream, int volume, int pitch, int fadein, int balance) {
+void GenericAudio::BGM_Play(Filesystem_Stream::InputStream stream, int volume, int pitch, int fadein) {
 	if (!stream) {
-		Output::Warning("Couldn't play BGM {}: File not readable", stream.GetName());
+		Output::Warning("Không thể phát BGM {}: Tệp tin không thể đọc được", stream.GetName());
 		return;
 	}
 
@@ -57,7 +57,7 @@ void GenericAudio::BGM_Play(Filesystem_Stream::InputStream stream, int volume, i
 			LockMutex();
 			BGM_PlayedOnceIndicator = false;
 			UnlockMutex();
-			PlayOnChannel(BGM_Channel, std::move(stream), volume, pitch, fadein, balance);
+			PlayOnChannel(BGM_Channel, std::move(stream), volume, pitch, fadein);
 			return;
 		}
 	}
@@ -151,14 +151,6 @@ void GenericAudio::BGM_Pitch(int pitch) {
 	UnlockMutex();
 }
 
-void GenericAudio::BGM_Balance(int balance) {
-	LockMutex();
-	for (auto& BGM_Channel : BGM_Channels) {
-		BGM_Channel.SetBalance(balance);
-	}
-	UnlockMutex();
-}
-
 std::string GenericAudio::BGM_GetType() const {
 	std::string type;
 
@@ -179,7 +171,7 @@ std::string GenericAudio::BGM_GetType() const {
 	return type;
 }
 
-void GenericAudio::SE_Play(std::unique_ptr<AudioSeCache> se, int volume, int pitch, int balance) {
+void GenericAudio::SE_Play(std::unique_ptr<AudioSeCache> se, int volume, int pitch) {
 	if (!se) {
 		Output::Warning("SE_Play: AudioSeCache data is NULL");
 		return;
@@ -188,7 +180,7 @@ void GenericAudio::SE_Play(std::unique_ptr<AudioSeCache> se, int volume, int pit
 	for (auto& SE_Channel : SE_Channels) {
 		if (!SE_Channel.decoder) {
 			//If there is an unused se channel
-			PlayOnChannel(SE_Channel, std::move(se), volume, pitch, balance);
+			PlayOnChannel(SE_Channel, std::move(se), volume, pitch);
 			return;
 		}
 	}
@@ -225,12 +217,12 @@ void GenericAudio::SetFormat(int frequency, AudioDecoder::Format format, int cha
 	output_format.channels = channels;
 }
 
-bool GenericAudio::PlayOnChannel(BgmChannel& chan, Filesystem_Stream::InputStream filestream, int volume, int pitch, int fadein, int balance) {
+bool GenericAudio::PlayOnChannel(BgmChannel& chan, Filesystem_Stream::InputStream filestream, int volume, int pitch, int fadein) {
 	chan.paused = true; // Pause channel so the audio thread doesn't work on it
 	chan.stopped = false; // Unstop channel so the audio thread doesn't delete it
 
 	if (!filestream) {
-		Output::Warning("BGM file not readable: {}", filestream.GetName());
+		Output::Warning("Tệp BGM không thể đọc được: {}", filestream.GetName());
 		return false;
 	}
 
@@ -253,7 +245,6 @@ bool GenericAudio::PlayOnChannel(BgmChannel& chan, Filesystem_Stream::InputStrea
 					midi_out.SetVolume(0);
 					midi_out.SetFade(volume, std::chrono::milliseconds(fadein));
 					midi_out.SetLooping(true);
-					midi_out.SetBalance(balance);
 					midi_out.Resume();
 					chan.paused = false;
 					chan.midi_out_used = true;
@@ -277,18 +268,17 @@ bool GenericAudio::PlayOnChannel(BgmChannel& chan, Filesystem_Stream::InputStrea
 		chan.decoder->SetVolume(0);
 		chan.decoder->SetFade(volume, std::chrono::milliseconds(fadein));
 		chan.decoder->SetLooping(true);
-		chan.decoder->SetBalance(balance);
 		chan.paused = false; // Unpause channel -> Play it.
 
 		return true;
 	} else {
-		Output::Warning("Couldn't play BGM {}. Format not supported", filestream.GetName());
+		Output::Warning("Không thể phát BGM {}. Định dạng không được hỗ trợ", filestream.GetName());
 	}
 
 	return false;
 }
 
-bool GenericAudio::PlayOnChannel(SeChannel& chan, std::unique_ptr<AudioSeCache> se, int volume, int pitch, int balance) {
+bool GenericAudio::PlayOnChannel(SeChannel& chan, std::unique_ptr<AudioSeCache> se, int volume, int pitch) {
 	chan.paused = true; // Pause channel so the audio thread doesn't work on it
 	chan.stopped = false; // Unstop channel so the audio thread doesn't delete it
 
@@ -296,7 +286,6 @@ bool GenericAudio::PlayOnChannel(SeChannel& chan, std::unique_ptr<AudioSeCache> 
 	chan.decoder->SetPitch(pitch);
 	chan.decoder->SetFormat(output_format.frequency, output_format.format, output_format.channels);
 	chan.decoder->SetVolume(volume);
-	chan.decoder->SetBalance(balance);
 	chan.paused = false; // Unpause channel -> Play it.
 	return true;
 }
@@ -326,7 +315,7 @@ void GenericAudio::Decode(uint8_t* output_buffer, int buffer_length) {
 		int samplesize = 0;
 		int frequency = 0;
 		AudioDecoder::Format sampleformat;
-		float vleft, vright;
+		float volume;
 
 		// Mix BGM and SE together;
 		bool is_bgm_channel = i < nr_of_bgm_channels;
@@ -340,14 +329,12 @@ void GenericAudio::Decode(uint8_t* output_buffer, int buffer_length) {
 				if (currently_mixed_channel.stopped) {
 					currently_mixed_channel.decoder.reset();
 				} else {
-					StereoVolume volume = currently_mixed_channel.decoder->GetVolume();
-					vleft = volume.left_volume / 100.0f * current_master_volume;
-					vright = volume.right_volume / 100.0f * current_master_volume;
+					currently_mixed_channel.decoder->Update(std::chrono::microseconds(1000 * 1000 / 60));
+					volume = current_master_volume * (currently_mixed_channel.decoder->GetVolume() / 100.0);
 					currently_mixed_channel.decoder->GetFormat(frequency, sampleformat, channels);
-					currently_mixed_channel.decoder->Update(std::chrono::milliseconds(samples_per_frame * 1000 / frequency));
 					samplesize = AudioDecoder::GetSamplesizeForFormat(sampleformat);
 
-					total_volume += std::max(vleft, vright);
+					total_volume += volume;
 
 					// determine how much data has to be read from this channel (but cap at the bounds of the scrap buffer)
 					unsigned bytes_to_read = (samplesize * channels * samples_per_frame);
@@ -376,13 +363,11 @@ void GenericAudio::Decode(uint8_t* output_buffer, int buffer_length) {
 				if (currently_mixed_channel.stopped) {
 					currently_mixed_channel.decoder.reset();
 				} else {
-					StereoVolume volume = currently_mixed_channel.decoder->GetVolume();
-					vleft = volume.left_volume / 100.0f * current_master_volume;
-					vright = volume.right_volume / 100.0f * current_master_volume;
+					volume = current_master_volume * (currently_mixed_channel.decoder->GetVolume() / 100.0);
 					currently_mixed_channel.decoder->GetFormat(frequency, sampleformat, channels);
 					samplesize = AudioDecoder::GetSamplesizeForFormat(sampleformat);
 
-					total_volume += std::max(vleft, vright);
+					total_volume += volume;
 
 					// determine how much data has to be read from this channel (but cap at the bounds of the scrap buffer)
 					unsigned bytes_to_read = (samplesize * channels * samples_per_frame);
@@ -414,8 +399,8 @@ void GenericAudio::Decode(uint8_t* output_buffer, int buffer_length) {
 		if (channel_used) {
 			for (unsigned ii = 0; ii < (unsigned)(read_bytes / (samplesize * channels)); ii++) {
 
-				float vall = vleft;
-				float valr = vright;
+				float vall = volume;
+				float valr = vall;
 
 				// Convert to floating point
 				switch (sampleformat) {
@@ -550,14 +535,6 @@ void GenericAudio::BgmChannel::SetPitch(int pitch) {
 		instance->midi_thread->GetMidiOut().SetPitch(pitch);
 	} else if (decoder) {
 		decoder->SetPitch(pitch);
-	}
-}
-
-void GenericAudio::BgmChannel::SetBalance(int balance) {
-	if (midi_out_used) {
-		instance->midi_thread->GetMidiOut().SetBalance(balance);
-	} else if (decoder) {
-		decoder->SetBalance(balance);
 	}
 }
 

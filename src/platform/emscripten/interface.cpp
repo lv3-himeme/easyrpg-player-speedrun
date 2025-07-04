@@ -95,7 +95,7 @@ bool Emscripten_Interface_Private::UploadSavegameStep2(int slot, int buffer_addr
 	std::istream is(new Filesystem_Stream::InputMemoryStreamBufView(lcf::Span<uint8_t>(reinterpret_cast<uint8_t*>(buffer_addr), size)));
 
 	if (!lcf::LSD_Reader::Load(is)) {
-		Output::Warning("Selected file is not a valid savegame");
+		Output::Warning("Tệp đã chọn không phải tệp tin lưu game");
 		return false;
 	}
 
@@ -114,7 +114,7 @@ bool Emscripten_Interface_Private::UploadSavegameStep2(int slot, int buffer_addr
 bool Emscripten_Interface_Private::UploadSoundfontStep2(std::string filename, int buffer_addr, int size) {
 	auto fs = Game_Config::GetSoundfontFilesystem();
 	if (!fs) {
-		Output::Warning("Cannot access Soundfont directory");
+		Output::Warning("Không thể truy cập thư mục soundfont");
 		return false;
 	}
 
@@ -122,7 +122,7 @@ bool Emscripten_Interface_Private::UploadSoundfontStep2(std::string filename, in
 
 	// TODO: No good way to sanitize this, would require launching an entire, second fluidsynth session
 	if (!EndsWith(name, ".sf2")) {
-		Output::Warning("Selected file is not a valid soundfont");
+		Output::Warning("Tệp tin đã chọn không phải tệp tin soundfont hợp lệ");
 		return false;
 	}
 
@@ -141,7 +141,7 @@ bool Emscripten_Interface_Private::UploadSoundfontStep2(std::string filename, in
 bool Emscripten_Interface_Private::UploadFontStep2(std::string filename, int buffer_addr, int size) {
 	auto fs = Game_Config::GetFontFilesystem();
 	if (!fs) {
-		Output::Warning("Cannot access Font directory");
+		Output::Warning("Không thể truy cập thư mục phông chữ");
 		return false;
 	}
 
@@ -149,7 +149,7 @@ bool Emscripten_Interface_Private::UploadFontStep2(std::string filename, int buf
 
 	Filesystem_Stream::InputStream is(new Filesystem_Stream::InputMemoryStreamBufView(lcf::Span<uint8_t>(reinterpret_cast<uint8_t*>(buffer_addr), size)), filename);
 	if (!Font::CreateFtFont(std::move(is), 12, false, false)) {
-		Output::Warning("Selected file is not a valid font");
+		Output::Warning("Tệp tin đã chọn không phải tệp tin phông chữ hợp lệ");
 		return false;
 	}
 

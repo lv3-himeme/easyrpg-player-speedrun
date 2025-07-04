@@ -38,7 +38,6 @@
 #include "game_message.h"
 #include "game_screen.h"
 #include "game_pictures.h"
-#include "game_variables.h"
 #include "scene_battle.h"
 #include "scene_map.h"
 #include <lcf/lmu/reader.h>
@@ -334,13 +333,13 @@ std::unique_ptr<lcf::rpg::Map> Game_Map::LoadMapFile(int map_id) {
 		map_file = FileFinder::Game().FindFile(map_name);
 
 		if (map_file.empty()) {
-			Output::Error("Loading of Map {} failed.\nThe map was not found.", map_name);
+			Output::Error("Không thể tải bản đồ số {}.\nKhông tìm thấy bản đồ này.", map_name);
 			return nullptr;
 		}
 
 		auto map_stream = FileFinder::Game().OpenInputStream(map_file);
 		if (!map_stream) {
-			Output::Error("Loading of Map {} failed.\nMap not readable.", map_name);
+			Output::Error("Không thể tải bản đồ số {}.\nKhông thể đọc bản đồ này.", map_name);
 			return nullptr;
 		}
 
@@ -355,7 +354,7 @@ std::unique_ptr<lcf::rpg::Map> Game_Map::LoadMapFile(int map_id) {
 	} else {
 		auto map_stream = FileFinder::Game().OpenInputStream(map_file);
 		if (!map_stream) {
-			Output::Error("Loading of Map {} failed.\nMap not readable.", map_name);
+			Output::Error("Không thể tải bản đồ số {}.\nKhông thể đọc bản đồ này.", map_name);
 			return nullptr;
 		}
 		map = lcf::LMU_Reader::LoadXml(map_stream);
@@ -1432,7 +1431,7 @@ bool Game_Map::UpdateForegroundEvents(MapUpdateAsyncContext& actx) {
 			}
 		}
 		if (run_ce) {
-			interp.Push<InterpreterExecutionType::AutoStart>(run_ce);
+			interp.Push(run_ce);
 		}
 
 		Game_Event* run_ev = nullptr;
@@ -1447,25 +1446,7 @@ bool Game_Map::UpdateForegroundEvents(MapUpdateAsyncContext& actx) {
 			}
 		}
 		if (run_ev) {
-			if (run_ev->WasStartedByDecisionKey()) {
-				interp.Push<InterpreterExecutionType::Action>(run_ev);
-			} else {
-				switch (run_ev->GetTrigger()) {
-					case lcf::rpg::EventPage::Trigger_touched:
-						interp.Push<InterpreterExecutionType::Touch>(run_ev);
-						break;
-					case lcf::rpg::EventPage::Trigger_collision:
-						interp.Push<InterpreterExecutionType::Collision>(run_ev);
-						break;
-					case lcf::rpg::EventPage::Trigger_auto_start:
-						interp.Push<InterpreterExecutionType::AutoStart>(run_ev);
-						break;
-					case lcf::rpg::EventPage::Trigger_action:
-					default:
-						interp.Push<InterpreterExecutionType::Action>(run_ev);
-						break;
-				}
-			}
+			interp.Push(run_ev);
 			run_ev->ClearWaitingForegroundExecution();
 		}
 
@@ -1615,7 +1596,7 @@ static void OnEncounterEnd(BattleResult result) {
 	auto* ce = lcf::ReaderUtil::GetElement(common_events, Game_Battle::GetDeathHandlerCommonEvent());
 	if (ce) {
 		auto& interp = Game_Map::GetInterpreter();
-		interp.Push<InterpreterExecutionType::DeathHandler>(ce);
+		interp.Push(ce);
 	}
 
 	auto tt = Game_Battle::GetDeathHandlerTeleport();
@@ -1636,11 +1617,6 @@ bool Game_Map::PrepareEncounter(BattleArgs& args) {
 	}
 
 	args.troop_id = encounters[Rand::GetRandomNumber(0, encounters.size() - 1)];
-
-	if (RuntimePatches::EncounterRandomnessAlert::HandleEncounter(args.troop_id)) {
-		//Cancel the battle setup
-		return false;
-	}
 
 	if (Feature::HasRpg2kBattleSystem()) {
 		if (Rand::ChanceOf(1, 32)) {

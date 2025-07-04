@@ -25,7 +25,6 @@
 #include "game_clock.h"
 #include "output.h"
 #include "audio_secache.h"
-#include "audio_decoder_base.h"
 
 //#define EP_DEBUG_CTRAUDIO
 #ifdef EP_DEBUG_CTRAUDIO
@@ -67,7 +66,7 @@ bool set_channel_format(int dsp_chn, AudioDecoder::Format format, int channels, 
 	bool res = true;
 
 	if (channels < 1 || channels > 2) {
-		Output::Warning("Unsupported number of channels!");
+		Output::Warning("Định dạng kênh của âm thanh không được hỗ trợ!");
 		return false;
 	}
 
@@ -90,20 +89,20 @@ bool set_channel_format(int dsp_chn, AudioDecoder::Format format, int channels, 
 			break;
 
 		default:
-			Output::Warning("Unhandled audio channel format!");
+			Output::Warning("Định dạng kênh của âm thanh không được hỗ trợ!");
 			res = false;
 	}
 
 	return res;
 }
 
-void CtrAudio::BGM_Play(Filesystem_Stream::InputStream filestream, int volume, int pitch, int fadein, int balance) {
+void CtrAudio::BGM_Play(Filesystem_Stream::InputStream filestream, int volume, int pitch, int fadein) {
 	if (!dsp_inited)
 		return;
 
 	std::string_view name = filestream.GetName();
 	if (!filestream) {
-		Output::Warning("Couldn't play BGM {}: File not readable", name);
+		Output::Warning("Không thể phát BGM {}: Tệp tin không đọc được", name);
 		return;
 	}
 
@@ -120,7 +119,6 @@ void CtrAudio::BGM_Play(Filesystem_Stream::InputStream filestream, int volume, i
 		bgm.decoder->SetVolume(0);
 		bgm.decoder->SetFade(volume, std::chrono::milliseconds(fadein));
 		bgm.decoder->SetLooping(true);
-		bgm.decoder->SetBalance(balance);
 
 		if (!set_channel_format(bgm.channel, format, channels, out_format)) {
 			DebugLog("{} has unsupported format, using close format.", name);
@@ -134,7 +132,7 @@ void CtrAudio::BGM_Play(Filesystem_Stream::InputStream filestream, int volume, i
 			bgm.buf[i].nsamples = nsamples;
 		}
 	} else {
-		Output::Warning("Couldn't play BGM {}: Format not supported", name);
+		Output::Warning("Không thể phát BGM {}: Định dạng không được hỗ trợ", name);
 	}
 
 	UnlockMutex();
@@ -207,13 +205,6 @@ void CtrAudio::BGM_Pitch(int pitch) {
 	}
 }
 
-void CtrAudio::BGM_Balance(int balance) {
-	if (!bgm.decoder)
-		return;
-
-	bgm.decoder->SetBalance(balance);
-}
-
 std::string CtrAudio::BGM_GetType() const {
 	if (bgm.decoder) {
 		return bgm.decoder->GetType();
@@ -221,7 +212,7 @@ std::string CtrAudio::BGM_GetType() const {
 	return "";
 }
 
-void CtrAudio::SE_Play(std::unique_ptr<AudioSeCache> se_cache, int volume, int pitch, int balance) {
+void CtrAudio::SE_Play(std::unique_ptr<AudioSeCache> se_cache, int volume, int pitch) {
 	if (!dsp_inited)
 		return;
 
@@ -245,7 +236,6 @@ void CtrAudio::SE_Play(std::unique_ptr<AudioSeCache> se_cache, int volume, int p
 
 	auto dec = se_cache->CreateSeDecoder();
 	dec->SetPitch(pitch);
-	dec->SetBalance(balance);
 
 	int frequency;
 	AudioDecoder::Format format, out_format;
@@ -360,9 +350,7 @@ void n3ds_audio_thread(void* userdata) {
 				reinterpret_cast<uint8_t*>(bgm.buf[target_block].data_pcm16),
 				bgm.buf_size);
 			DSP_FlushDataCache(bgm.buf[target_block].data_pcm16, bgm.buf_size);
-			StereoVolume volume = bgm.decoder->GetVolume();
-			mix[0] = volume.left_volume / 100.0f * audio->GetConfig().music_volume.Get() / 100.0f;
-			mix[1] = volume.right_volume / 100.0f * audio->GetConfig().music_volume.Get() / 100.0f;
+			mix[0] = mix[1] = bgm.decoder->GetVolume() / 100.0f * audio->GetConfig().music_volume.Get() / 100.0f;
 			ndspChnSetMix(bgm.channel, mix);
 			ndspChnWaveBufAdd(bgm.channel, &bgm.buf[target_block]);
 		} else {
@@ -378,11 +366,11 @@ CtrAudio::CtrAudio(const Game_ConfigAudio& cfg) : AudioInterface(cfg) {
 
 	Result res = ndspInit();
 	if (R_FAILED(res)) {
-		Output::Warning("Couldn't initialize audio");
+		Output::Warning("Không thể khởi tạo âm thanh");
 		if ((R_SUMMARY(res) == RS_NOTFOUND) && (R_MODULE(res) == RM_DSP))
-			Output::Warning("This needs a dumped DSP firmware to work!");
+			Output::Warning("Cần có firmware DSP đã trích xuất để hoạt động!");
 		else
-			Output::Warning("Error code: {:#X}", res);
+			Output::Warning("Mã lỗi: {:#X}", res);
 		return;
 	}
 	ndspSetOutputCount(1);
@@ -407,7 +395,7 @@ CtrAudio::CtrAudio(const Game_ConfigAudio& cfg) : AudioInterface(cfg) {
 	ndspSetCallback(n3ds_dsp_callback, this);
 	audio_thread = threadCreate(n3ds_audio_thread, this, 32768, 0x18, 1, true);
 	if(!audio_thread)
-		Output::Warning("Couldn't create bgm thread!");
+		Output::Warning("Không thể tạo luồng nhạc nền (BGM)!");
 
 #ifdef EP_DEBUG_CTRAUDIO
 	dsp_tick = Game_Clock::now();

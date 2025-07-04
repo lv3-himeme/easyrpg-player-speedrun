@@ -85,7 +85,7 @@ void Window_VarList::DrawItemValue(int index){
 			{
 				auto value = Main_Data::game_switches->Get(first_var + index);
 				auto font = (!value) ? Font::ColorCritical : Font::ColorDefault;
-				contents->TextDraw(GetWidth() - 16, y, font, value ? "[ON]" : "[OFF]", Text::AlignRight);
+				contents->TextDraw(GetWidth() - 16, y, font, value ? "[BẬT]" : "[TẮT]", Text::AlignRight);
 			}
 			break;
 		case eVariable:

@@ -303,6 +303,6 @@ void Psp2Ui::vGetConfig(Game_ConfigVideo& cfg) const {
 
 	if (cfg.stretch.Get()) {
 		cfg.touch_ui.SetLocked(true);
-		cfg.touch_ui.SetDescription("Not available when stretch is enabled");
+		cfg.touch_ui.SetDescription("Không khả dụng khi bật tuỳ chọn kéo dãn");
 	}
 }

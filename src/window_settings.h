@@ -122,7 +122,7 @@ public:
 	void DrawOption(int index);
 
 	Window_Help* help_window2 = nullptr;
-	RangeConfigParam<int> font_size { "<Font Size>", "Font size to use. Not supported for the built-in font.", "", "", 12, 6, 16};
+	RangeConfigParam<int> font_size { "<Cỡ chữ>", "Cỡ chữ được sử dụng. Không hỗ trợ cho phông chữ mặc định.", "", "", 12, 6, 16};
 private:
 
 	template <typename Param, typename Action>
@@ -179,8 +179,8 @@ private:
 	};
 
 	EnumConfigParam<SampleText, 9> sample_text{
-		"<Sample Text>", "Text to show in the preview", "", "", SampleText::English,
-		Utils::MakeSvArray("English", "French", "German", "Spanish", "Chinese", "Japanese (Hiragana)", "Japanese (Kanji)", "Korean", "Various Diacritics"),
+		"<Chữ mẫu>", "Chữ sẽ được hiển thị ở phần xem trước", "", "", SampleText::English,
+		Utils::MakeSvArray("Tiếng Anh", "Tiếng Pháp", "Tiếng Đức", "Tiếng Tây Ban Nha", "Tiếng Trung", "Tiếng Nhật (Hiragana)", "Tiếng Nhật (Kanji)", "Tiếng Hàn", "Tiếng Việt"),
 		Utils::MakeSvArray("", "", "", "", "", "", "", "", ""),
 		Utils::MakeSvArray(
 			"The quick brown fox jumps over the lazy dog 1234567890.?!",
@@ -191,7 +191,7 @@ private:
 			"いろはにほへと ちりぬるを わかよたれそ つねならむ うゐのおくやま けふこえて あさきゆめみし ゑひもせす",
 			"色は匂えど散りぬるを我が世誰ぞ常ならん有為の奥山今日越えて浅き夢見じ酔いもせず",
 			"키스의 고유조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다",
-			"ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ"
+			"Vầng trăng sáng soi bóng cây khế dịu dàng bên dòng sông lặng."
 		)
 	};
 };

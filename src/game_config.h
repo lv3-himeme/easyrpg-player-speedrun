@@ -85,55 +85,55 @@ namespace ConfigEnum {
 struct Game_ConfigPlayer {
 	StringConfigParam autobattle_algo{ "", "", "", "", "" };
 	StringConfigParam enemyai_algo{ "", "", "", "", "" };
-	BoolConfigParam settings_autosave{ "Save settings on exit", "Automatically save the settings on exit", "Player", "SettingsAutosave", false };
-	BoolConfigParam settings_in_title{ "Show settings on title screen", "Display settings menu item on the title screen", "Player", "SettingsInTitle", false };
-	BoolConfigParam settings_in_menu{ "Show settings in menu", "Display settings menu item on the menu screen", "Player", "SettingsInMenu", false };
+	BoolConfigParam settings_autosave{ "Lưu cài đặt khi thoát", "Tự động lưu cài đặt khi thoát", "Player", "SettingsAutosave", false };
+	BoolConfigParam settings_in_title{ "Hiển thị cài đặt ở màn hình tiêu đề", "Hiển thị mục chỉnh sửa cài đặt ở màn hình tiêu đề", "Player", "SettingsInTitle", false };
+	BoolConfigParam settings_in_menu{ "Hiển thị cài đặt ở menu", "Hiển thị mục chỉnh sửa cài đặt ở màn hình menu", "Player", "SettingsInMenu", false };
 	EnumConfigParam<ConfigEnum::StartupLogos, 3> show_startup_logos{
-		"Startup Logos", "Logos that are displayed on startup", "Player", "StartupLogos", ConfigEnum::StartupLogos::Custom,
-		Utils::MakeSvArray("None", "Custom", "All"),
+		"Biểu tượng khởi động", "Biểu tượng được hiển thị khi khởi động game", "Player", "StartupLogos", ConfigEnum::StartupLogos::Custom,
+		Utils::MakeSvArray("Không", "Tuỳ chỉnh", "Tất cả"),
 		Utils::MakeSvArray("none", "custom", "all"),
-		Utils::MakeSvArray("Do not show any additional logos", "Show custom logos bundled with the game", "Show all logos, including the original from RPG Maker")};
-	PathConfigParam font1 { "Font 1", "The game chooses whether it wants font 1 or 2", "Player", "Font1", "" };
-	RangeConfigParam<int> font1_size { "Font 1 Size", "", "Player", "Font1Size", 12, 6, 16};
-	PathConfigParam font2 { "Font 2", "The game chooses whether it wants font 1 or 2", "Player", "Font2", "" };
-	RangeConfigParam<int> font2_size { "Font 2 Size", "", "Player", "Font2Size", 12, 6, 16};
+		Utils::MakeSvArray("Không hiển thị thêm biểu tượng nào", "Hiển thị biểu tượng tuỳ chỉnh được tích hợp vào game", "Hiển thị toàn bộ biểu tượng, bao gồm cả biểu tượng mặc định của RPG Maker")};
+	PathConfigParam font1 { "Phông chữ 1", "Game sẽ chọn phông chữ số 1 hoặc phông chữ số 2", "Player", "Font1", "" };
+	RangeConfigParam<int> font1_size { "Cỡ chữ của phông chữ 1", "", "Player", "Font1Size", 12, 6, 16};
+	PathConfigParam font2 { "Phông chữ 2", "Game sẽ chọn phông chữ số 1 hoặc phông chữ số 2", "Player", "Font2", "" };
+	RangeConfigParam<int> font2_size { "Cỡ chữ của phông chữ 2", "", "Player", "Font2Size", 12, 6, 16};
 	EnumConfigParam<ConfigEnum::StartupLangSelect, 3> lang_select_on_start {
-		"Startup Language Menu", "Show language menu before booting up a game", "Player", "StartupLangSelect", ConfigEnum::StartupLangSelect::FirstStartup,
-		Utils::MakeSvArray("Never", "First Start", "Always"),
+		"Menu chọn ngôn ngữ", "Hiển thị bảng chọn ngôn ngữ khi khởi động game", "Player", "StartupLangSelect", ConfigEnum::StartupLangSelect::FirstStartup,
+		Utils::MakeSvArray("Không bao giờ", "Lần đầu tiên", "Luôn hiển thị"),
 		Utils::MakeSvArray("never", "FirstStartup", "always"),
-		Utils::MakeSvArray("Never show language menu on start", "Show on first start (when no save files are found)", "Always show language menu prior to the title screen") };
-	BoolConfigParam lang_select_in_title{ "Show language menu on title screen", "Display language menu item on the title screen", "Player", "LanguageInTitle", true };
-	BoolConfigParam log_enabled{ "Logging", "Write diagnostic messages into a logfile", "Player", "Logging", true };
-	RangeConfigParam<int> screenshot_scale { "Screenshot scaling factor", "Scale screenshots by the given factor", "Player", "ScreenshotScale", 1, 1, 24};
-	BoolConfigParam screenshot_timestamp{ "Screenshot timestamp", "Add the current date and time to the file name", "Player", "ScreenshotTimestamp", true };
-	BoolConfigParam automatic_screenshots{ "Automatic screenshots", "Periodically take screenshots", "Player", "AutomaticScreenshots", false };
-	RangeConfigParam<int> automatic_screenshots_interval{ "Screenshot interval", "The interval between automatic screenshots (seconds)", "Player", "AutomaticScreenshotsInterval", 30, 1, 999999 };
+		Utils::MakeSvArray("Không bao giờ hiển thị menu ngôn ngữ khi khởi động", "Chỉ hiển thị lần đầu (khi không tìm thấy tệp lưu game)", "Luôn hiển thị menu ngôn ngữ trước màn hình tiêu đề") };
+	BoolConfigParam lang_select_in_title{ "Menu ngôn ngữ ở màn hình tiêu đề", "Hiển thị mục menu ngôn ngữ trong màn hình tiêu đề", "Player", "LanguageInTitle", true };
+	BoolConfigParam log_enabled{ "Ghi nhật ký", "Ghi các thông điệp chẩn đoán vào tệp nhật ký", "Player", "Logging", true };
+	RangeConfigParam<int> screenshot_scale { "Tỉ lệ chụp màn hình", "Phóng ảnh chụp màn hình theo hệ số được chỉ định", "Player", "ScreenshotScale", 1, 1, 24};
+	BoolConfigParam screenshot_timestamp{ "Dấu thời gian ảnh chụp", "Thêm ngày và giờ hiện tại vào tên tệp", "Player", "ScreenshotTimestamp", true };
+	BoolConfigParam automatic_screenshots{ "Tự động chụp màn hình", "Chụp màn hình định kỳ", "Player", "AutomaticScreenshots", false };
+	RangeConfigParam<int> automatic_screenshots_interval{ "Khoảng cách giữa các ảnh chụp", "Thời gian giữa các lần chụp màn hình tự động (giây)", "Player", "AutomaticScreenshotsInterval", 30, 1, 999999 };
 
 	void Hide();
 };
 
 struct Game_ConfigVideo {
-	LockedConfigParam<std::string> renderer{ "Renderer", "The rendering engine", "auto" };
-	BoolConfigParam vsync{ "V-Sync", "Toggle V-Sync mode (Recommended: ON)", "Video", "Vsync", true };
-	BoolConfigParam fullscreen{ "Fullscreen", "Toggle between fullscreen and window mode", "Video", "Fullscreen", true };
+	LockedConfigParam<std::string> renderer{ "Bộ dựng hình", "Bộ máy kết xuất đồ họa", "auto" };
+	BoolConfigParam vsync{ "Đồng bộ V-Sync", "Bật/tắt chế độ V-Sync (Khuyên dùng: BẬT)", "Video", "Vsync", true };
+	BoolConfigParam fullscreen{ "Toàn màn hình", "Chuyển đổi giữa chế độ toàn màn hình và cửa sổ", "Video", "Fullscreen", true };
 	EnumConfigParam<ConfigEnum::ShowFps, 3> fps{
-		"FPS counter", "How to display the FPS counter", "Video", "Fps", ConfigEnum::ShowFps::OFF,
-		Utils::MakeSvArray("[OFF]", "[ON]", "Overlay"),
+		"Bộ đếm FPS", "Cách hiển thị bộ đếm FPS", "Video", "Fps", ConfigEnum::ShowFps::OFF,
+		Utils::MakeSvArray("[TẮT]", "[BẬT]", "Overlay"),
 		Utils::MakeSvArray("off", "on", "overlay"),
-		Utils::MakeSvArray("Do not show the FPS counter", "Show the FPS counter", "Always show the FPS counter inside the window")};
-	RangeConfigParam<int> fps_limit{ "Frame Limiter", "Toggle the frames per second limit (Recommended: 60)", "Video", "FpsLimit", DEFAULT_FPS, 0, 99999 };
-	ConfigParam<int> window_zoom{ "Window Zoom", "Toggle the window zoom level", "Video", "WindowZoom", 2 };
-	EnumConfigParam<ConfigEnum::ScalingMode, 3> scaling_mode{ "Scaling method", "How the output is scaled", "Video", "ScalingMode", ConfigEnum::ScalingMode::Nearest,
-		Utils::MakeSvArray("Nearest", "Integer", "Bilinear"),
+		Utils::MakeSvArray("Không hiển thị bộ đếm FPS", "Hiển thị bộ đếm FPS", "Luôn hiển thị bộ đếm FPS trong cửa sổ")};
+	RangeConfigParam<int> fps_limit{ "Giới hạn khung hình", "Giới hạn số khung hình mỗi giây (Khuyên dùng: 60)", "Video", "FpsLimit", DEFAULT_FPS, 0, 99999 };
+	ConfigParam<int> window_zoom{ "Thu phóng cửa sổ", "Điều chỉnh mức độ thu phóng cửa sổ", "Video", "WindowZoom", 2 };
+	EnumConfigParam<ConfigEnum::ScalingMode, 3> scaling_mode{ "Phương pháp co giãn", "Cách thức hình ảnh được co giãn", "Video", "ScalingMode", ConfigEnum::ScalingMode::Nearest,
+		Utils::MakeSvArray("Gần nhất", "Bội số", "Đa tuyến tính"),
 		Utils::MakeSvArray("nearest", "integer", "bilinear"),
-		Utils::MakeSvArray("Scale to screen size (Causes scaling artifacts)", "Scale to multiple of the game resolution", "Like Nearest, but output is blurred to avoid artifacts")};
-	BoolConfigParam stretch{ "Stretch", "Stretch to the width of the window/screen", "Video", "Stretch", false };
-	BoolConfigParam pause_when_focus_lost{ "Pause when focus lost", "Pause the program when it is in the background", "Video", "PauseWhenFocusLost", true };
-	BoolConfigParam touch_ui{ "Touch Ui", "Display the touch ui", "Video", "TouchUi", true };
-	EnumConfigParam<ConfigEnum::GameResolution, 3> game_resolution{ "Resolution", "Game resolution. Changes require a restart.", "Video", "GameResolution", ConfigEnum::GameResolution::Original,
-		Utils::MakeSvArray("Original (Recommended)", "Widescreen (Experimental)", "Ultrawide (Experimental)"),
+		Utils::MakeSvArray("Phóng theo kích thước màn hình (Có thể gây lỗi hình ảnh)", "Phóng theo bội số của độ phân giải trò chơi", "Giống tuỳ chọn Gần nhất nhưng đầu ra được làm mờ để tránh lỗi hình ảnh")};
+	BoolConfigParam stretch{ "Kéo giãn", "Kéo giãn theo chiều ngang của cửa sổ/màn hình", "Video", "Stretch", false };
+	BoolConfigParam pause_when_focus_lost{ "Tạm dừng khi chuyển khỏi cửa sổ", "Tạm dừng chương trình khi chạy nền", "Video", "PauseWhenFocusLost", true };
+	BoolConfigParam touch_ui{ "Giao diện cảm ứng", "Hiển thị giao diện cảm ứng", "Video", "TouchUi", true };
+	EnumConfigParam<ConfigEnum::GameResolution, 3> game_resolution{ "Độ phân giải", "Độ phân giải trò chơi. Thay đổi yêu cầu khởi động lại.", "Video", "GameResolution", ConfigEnum::GameResolution::Original,
+		Utils::MakeSvArray("Gốc (khuyên dùng)", "Màn ảnh rộng (thử nghiệm)", "Màn ảnh siêu rộng (thử nghiệm)"),
 		Utils::MakeSvArray("original", "widescreen", "ultrawide"),
-		Utils::MakeSvArray("The default resolution (320x240, 4:3)", "Can cause glitches (416x240, 16:9)", "Can cause glitches (560x240, 21:9)")};
+		Utils::MakeSvArray("Độ phân giải mặc định (320x240, 4:3)", "Có thể gây lỗi (416x240, 16:9)", "Có thể gây lỗi (560x240, 21:9)")};
 
 	// These are never shown and are used to restore the window to the previous position
 	ConfigParam<int> window_x{ "", "", "Video", "WindowX", -1 };
@@ -145,23 +145,23 @@ struct Game_ConfigVideo {
 };
 
 struct Game_ConfigAudio {
-	RangeConfigParam<int> music_volume{ "BGM Volume", "Volume of the background music", "Audio", "MusicVolume", 100, 0, 100 };
-	RangeConfigParam<int> sound_volume{ "SFX Volume", "Volume of the sound effects", "Audio", "SoundVolume", 100, 0, 100 };
-	BoolConfigParam fluidsynth_midi { EP_FLUID_NAME " (SF2)", "Play MIDI using SF2 soundfonts", "Audio", "Fluidsynth", true };
-	BoolConfigParam wildmidi_midi { "WildMidi (GUS)", "Play MIDI using GUS patches", "Audio", "WildMidi", true };
-	BoolConfigParam native_midi { "Native MIDI", "Play MIDI through the operating system ", "Audio", "NativeMidi", true };
-	LockedConfigParam<std::string> fmmidi_midi { "FmMidi", "Play MIDI using the built-in MIDI synthesizer", "[Always ON]" };
-	PathConfigParam soundfont { "Soundfont", "Soundfont to use for " EP_FLUID_NAME, "Audio", "Soundfont", "" };
+	RangeConfigParam<int> music_volume{ "Âm lượng nhạc nền", "Điều chỉnh âm lượng của nhạc nền", "Audio", "MusicVolume", 100, 0, 100 };
+	RangeConfigParam<int> sound_volume{ "Âm lượng hiệu ứng", "Điều chỉnh âm lượng của hiệu ứng âm thanh", "Audio", "SoundVolume", 100, 0, 100 };
+	BoolConfigParam fluidsynth_midi { EP_FLUID_NAME " (SF2)", "Phát MIDI bằng soundfont SF2", "Audio", "Fluidsynth", true };
+	BoolConfigParam wildmidi_midi { "WildMidi (GUS)", "Phát MIDI bằng GUS patch", "Audio", "WildMidi", true };
+	BoolConfigParam native_midi { "MIDI hệ thống", "Phát MIDI qua hệ điều hành", "Audio", "NativeMidi", true };
+	LockedConfigParam<std::string> fmmidi_midi { "FmMidi", "Phát MIDI bằng bộ tổng hợp tích hợp sẵn", "[Luôn BẬT]" };
+	PathConfigParam soundfont { "Soundfont", "Soundfont sử dụng cho " EP_FLUID_NAME, "Audio", "Soundfont", "" };
 
 	void Hide();
 };
 
 struct Game_ConfigInput {
-	RangeConfigParam<int> speed_modifier_a{ "Fast Forward A: Speed", "Set fast forward A speed", "Input", "SpeedModifierA", 3, 2, 100 };
-	RangeConfigParam<int> speed_modifier_b{ "Fast Forward B: Speed", "Set fast forward B speed", "Input", "SpeedModifierB", 10, 2, 100 };
-	BoolConfigParam gamepad_swap_analog{ "Gamepad: Swap Analog Sticks", "Swap left and right stick", "Input", "GamepadSwapAnalog", false };
-	BoolConfigParam gamepad_swap_dpad_with_buttons{ "Gamepad: Swap D-Pad with buttons", "Swap D-Pad with ABXY-Buttons", "Input", "GamepadSwapDpad", false };
-	BoolConfigParam gamepad_swap_ab_and_xy{ "Gamepad: Swap AB and XY", "Swap A and B with X and Y", "Input", "GamepadSwapAbxy", false };
+	RangeConfigParam<int> speed_modifier_a{ "Tăng tốc A: Tốc độ", "Thiết lập tốc độ khi nhấn tăng tốc A", "Input", "SpeedModifierA", 3, 2, 100 };
+	RangeConfigParam<int> speed_modifier_b{ "Tăng tốc B: Tốc độ", "Thiết lập tốc độ khi nhấn tăng tốc B", "Input", "SpeedModifierB", 10, 2, 100 };
+	BoolConfigParam gamepad_swap_analog{ "Tay cầm: Đảo cần analog", "Đảo vị trí cần analog trái và phải", "Input", "GamepadSwapAnalog", false };
+	BoolConfigParam gamepad_swap_dpad_with_buttons{ "Tay cầm: Đảo D-Pad với nút", "Đảo D-Pad với các nút ABXY", "Input", "GamepadSwapDpad", false };
+	BoolConfigParam gamepad_swap_ab_and_xy{ "Tay cầm: Đảo AB và XY", "Đảo A và B với X và Y", "Input", "GamepadSwapAbxy", false };
 	Input::ButtonMappingArray buttons;
 
 	void Hide();

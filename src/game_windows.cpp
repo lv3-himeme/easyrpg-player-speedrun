@@ -202,12 +202,12 @@ void Game_Windows::Window_User::Refresh(bool& async_wait) {
 			}
 
 			if (!font_file) {
-				Output::Warning("Font not found: {}", text.font_name);
+				Output::Warning("Không thể tìm thấy font: {}", text.font_name);
 				font = Font::Default();
 			} else {
 				font = Font::CreateFtFont(std::move(font_file), text.font_size, text.flags.bold, text.flags.italic);
 				if (!font) {
-					Output::Warning("Error loading font: {}", text.font_name);
+					Output::Warning("Không thể tải font: {}", text.font_name);
 					font = Font::Default();
 				}
 			}

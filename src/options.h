@@ -19,7 +19,7 @@
 #define EP_OPTIONS_H
 
 /** Window title to show. */
-#define GAME_TITLE "EasyRPG Player"
+#define GAME_TITLE "EasyRPG Player Việt Hoá"
 
 // These two defines control the name of the folder structure in the global
 // configuration directory

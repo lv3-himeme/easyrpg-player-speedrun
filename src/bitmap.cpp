@@ -95,7 +95,7 @@ Bitmap::Bitmap(Filesystem_Stream::InputStream stream, bool transparent, uint32_t
 	pixman_format = find_format(format);
 
 	if (!stream) {
-		Output::Error("Couldn't read image file {}", stream.GetName());
+		Output::Error("Không thể đọc tệp tin hình ảnh {}", stream.GetName());
 		return;
 	}
 
@@ -114,7 +114,7 @@ Bitmap::Bitmap(Filesystem_Stream::InputStream stream, bool transparent, uint32_t
 	} else if (bytes >= 4 && strncmp((char*)(data + 1), "PNG", 3) == 0) {
 		img_okay = ImagePNG::Read(stream, transparent, image_out);
 	} else
-		Output::Warning("Unsupported image file {} (Magic: {:02X})", stream.GetName(), *reinterpret_cast<uint32_t*>(data));
+		Output::Warning("Tệp tin hình ảnh không được hỗ trợ {} (Magic: {:02X})", stream.GetName(), *reinterpret_cast<uint32_t*>(data));
 
 	if (!img_okay) {
 		free(image_out.pixels);
@@ -147,7 +147,7 @@ Bitmap::Bitmap(const uint8_t* data, unsigned bytes, bool transparent, uint32_t f
 	else if (bytes > 4 && strncmp((char*)(data + 1), "PNG", 3) == 0)
 		img_okay = ImagePNG::Read((const void*) data, transparent, image_out);
 	else
-		Output::Warning("Unsupported image (Magic: {:02X})", bytes >= 4 ? *reinterpret_cast<const uint32_t*>(data) : 0);
+		Output::Warning("Tệp tin hình ảnh không được hỗ trợ (Magic: {:02X})", bytes >= 4 ? *reinterpret_cast<const uint32_t*>(data) : 0);
 
 	if (!img_okay) {
 		free(image_out.pixels);
@@ -523,7 +523,7 @@ void Bitmap::Init(int width, int height, void* data, int pitch, bool destroy) {
 	bitmap.reset(pixman_image_create_bits(pixman_format, width, height, (uint32_t*) data, pitch));
 
 	if (bitmap == NULL) {
-		Output::Error("Couldn't create {}x{} image.", width, height);
+		Output::Error("Không thể tạo hình ảnh {}x{}.", width, height);
 	}
 
 	if (format.bits == 8) {

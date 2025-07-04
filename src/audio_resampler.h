@@ -21,7 +21,6 @@
 // Headers
 // Don't remove the system.h include, prevents heap corruption for automake (preprocessor defines)
 #include "audio_decoder.h"
-#include "audio_decoder_base.h"
 #include "system.h"
 #include <string>
 #include <memory>
@@ -88,9 +87,9 @@ public:
 	/**
 	 * Obtains the volume of the wrapped decoder.
 	 *
-	 * @return pair of current left-right volume (from 0 - 100)
+	 * @return current volume (from 0 - 100)
 	 */
-	StereoVolume GetVolume() const override;
+	int GetVolume() const override;
 
 	/**
 	 * Sets the current volume of the wrapped decoder.
@@ -143,17 +142,6 @@ public:
 	 * @return loop count
 	 */
 	int GetLoopCount() const override;
-
-	/**
-	 * Gets the current pan/balance of the underlying decoder.
-	 * 0 = full left, 50 = center, 100 = full right
-	 */
-	int GetBalance() const override;
-
-	/**
-	 * Sets the pan/balance of the underlying decoder.
-	 */
-	void SetBalance(int new_balance) override;
 
 	/**
 	 * Wraps the tell function of the contained decoder

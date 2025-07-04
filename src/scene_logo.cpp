@@ -126,7 +126,7 @@ bool Scene_Logo::DetectGame() {
 	if (!fs) {
 		fs = FileFinder::Root().Create(Main_Data::GetDefaultProjectPath());
 		if (!fs) {
-			Output::Error("{} is not a valid path", Main_Data::GetDefaultProjectPath());
+			Output::Error("Đường dẫn {} không hợp lệ", Main_Data::GetDefaultProjectPath());
 		}
 		FileFinder::SetGameFilesystem(fs);
 	}

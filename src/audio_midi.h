@@ -213,7 +213,7 @@ public:
 	 * Checks if Fluidsynth works.
 	 *
 	 * @param status_message Current Fluidsynth status
-	 * @return true: Works, false: Not working
+	 * @return true: Works, false: Không hoạt động
 	 */
 	static bool CheckFluidsynth(std::string& status_message);
 
@@ -223,7 +223,7 @@ public:
 	 * Checks if WildMidi works.
 	 *
 	 * @param status_message Current WildMidi status
-	 * @return true: Works, false: Not working
+	 * @return true: Works, false: Không hoạt động
 	 */
 	static bool CheckWildMidi(std::string& status_message);
 

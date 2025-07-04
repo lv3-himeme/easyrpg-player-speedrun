@@ -28,7 +28,7 @@
 /**
  * Extracts resources from an EXE.
  * The istream given is still owned by the parent,
- *  but it is in use by the reader.
+ *  but it is Đang sử dụng by the reader.
  */
 class EXEReader {
 public:

@@ -20,7 +20,6 @@
 
 // Headers
 #include "game_battler.h"
-#include "game_runtime_patches.h"
 #include "sprite_enemy.h"
 #include "player.h"
 #include <lcf/rpg/enemy.h>
@@ -328,39 +327,27 @@ inline int Game_Enemy::GetTroopMemberId() const {
 }
 
 inline int Game_Enemy::GetBaseMaxHp() const {
-	auto max_hp = enemy->max_hp;
-	RuntimePatches::MonSca::ModifyMaxHp(*this, max_hp);
-	return max_hp;
+	return enemy->max_hp;
 }
 
 inline int Game_Enemy::GetBaseMaxSp() const {
-	auto max_sp = enemy->max_sp;
-	RuntimePatches::MonSca::ModifyMaxSp(*this, max_sp);
-	return max_sp;
+	return enemy->max_sp;
 }
 
 inline int Game_Enemy::GetBaseAtk(Weapon) const {
-	auto attack = enemy->attack;
-	RuntimePatches::MonSca::ModifyAtk(*this, attack);
-	return attack;
+	return enemy->attack;
 }
 
 inline int Game_Enemy::GetBaseDef(Weapon) const {
-	auto defense = enemy->defense;
-	RuntimePatches::MonSca::ModifyDef(*this, defense);
-	return defense;
+	return enemy->defense;
 }
 
 inline int Game_Enemy::GetBaseSpi(Weapon) const {
-	auto spirit = enemy->spirit;
-	RuntimePatches::MonSca::ModifySpi(*this, spirit);
-	return spirit;
+	return enemy->spirit;
 }
 
 inline int Game_Enemy::GetBaseAgi(Weapon) const {
-	auto agility = enemy->agility;
-	RuntimePatches::MonSca::ModifyAgi(*this, agility);
-	return agility;
+	return enemy->agility;
 }
 
 inline int Game_Enemy::GetHp() const {

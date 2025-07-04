@@ -16,7 +16,6 @@
  */
 
 #include "game_config_game.h"
-#include "game_runtime_patches.h"
 #include "cmdline_parser.h"
 #include "directory_tree.h"
 #include "filefinder.h"
@@ -25,8 +24,8 @@
 #include "player.h"
 #include <cstring>
 
-void Game_ConfigGame::Initialize(CmdlineParser& cp) {
-	Game_ConfigGame& cfg = *this;
+Game_ConfigGame Game_ConfigGame::Create(CmdlineParser& cp) {
+	Game_ConfigGame cfg;
 
 	auto cli_config = FileFinder::Game().OpenFile(EASYRPG_INI_NAME);
 	if (cli_config) {
@@ -57,6 +56,8 @@ void Game_ConfigGame::Initialize(CmdlineParser& cp) {
 			cfg.engine = Player::EngineRpg2k3 | Player::EngineMajorUpdated | Player::EngineEnglish;
 		}
 	}
+
+	return cfg;
 }
 
 void Game_ConfigGame::LoadFromArgs(CmdlineParser& cp) {
@@ -87,8 +88,6 @@ void Game_ConfigGame::LoadFromArgs(CmdlineParser& cp) {
 			patch_rpg2k3_commands.Lock(false);
 			patch_anti_lag_switch.Lock(0);
 			patch_direct_menu.Lock(0);
-
-			RuntimePatches::LockPatchesAsDiabled();
 			patch_override = true;
 			continue;
 		}
@@ -154,10 +153,6 @@ void Game_ConfigGame::LoadFromArgs(CmdlineParser& cp) {
 				patch_direct_menu.Set(0);
 				patch_override = true;
 			}
-			continue;
-		}
-		if (RuntimePatches::ParseFromCommandLine(cp)) {
-			patch_override = true;
 			continue;
 		}
 		if (cp.ParseNext(arg, 6, "--patch")) {
@@ -234,10 +229,6 @@ void Game_ConfigGame::LoadFromStream(Filesystem_Stream::InputStream& is) {
 	if (patch_direct_menu.FromIni(ini)) {
 		patch_override = true;
 	}
-
-	if (RuntimePatches::ParseFromIni(ini)) {
-		patch_override = true;
-	}
 }
 
 void Game_ConfigGame::PrintActivePatches() {
@@ -266,8 +257,6 @@ void Game_ConfigGame::PrintActivePatches() {
 	add_int(patch_maniac);
 	add_int(patch_anti_lag_switch);
 	add_int(patch_direct_menu);
-
-	RuntimePatches::DetermineActivePatches(patches);
 
 	if (patches.empty()) {
 		Output::Debug("Patch configuration: None");

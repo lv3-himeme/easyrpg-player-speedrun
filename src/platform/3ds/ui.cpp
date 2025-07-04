@@ -129,7 +129,7 @@ void CtrUi::ToggleBottomScreen(bool state) {
 		}
 		gspLcdExit();
 	} else {
-		Output::Warning("Could not turn Backlight state.");
+		Output::Warning("Không thể thay đổi trạng thái đèn nền.");
 	}
 }
 
@@ -306,7 +306,7 @@ bool CtrUi::ProcessEvents() {
 		PTMU_GetBatteryLevel(&battery.level); // 0-5
 
 		if (!battery.warned && !battery.adapter && !battery.level) {
-			Output::Warning("Your 3DS may run out of battery soon.");
+			Output::Warning("Máy 3DS của bạn sẽ hết pin sớm.");
 			battery.warned = true;
 		}
 
@@ -451,8 +451,8 @@ void CtrUi::vGetConfig(Game_ConfigVideo& cfg) const {
 
 	cfg.stretch.SetOptionVisible(true);
 	cfg.touch_ui.SetOptionVisible(true);
-	cfg.touch_ui.SetName("Backlight");
-	cfg.touch_ui.SetDescription("Toggle the backlight of the bottom screen");
+	cfg.touch_ui.SetName("Đèn nền");
+	cfg.touch_ui.SetDescription("Bật đèn nền của màn hình bên dưới");
 	cfg.touch_ui.Set(bottom_state != screen_state::off);
 }
 

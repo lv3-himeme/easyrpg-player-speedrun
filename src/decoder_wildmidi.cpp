@@ -287,11 +287,11 @@ bool WildMidiDecoder::Initialize(std::string& status_message) {
 
 	// bail, if nothing found
 	if (!found) {
-		status_message = "Could not find configuration file.";
+		status_message = "Không tìm thấy tệp tin cài đặt.";
 		return false;
 	}
 
-	status_message = fmt::format("Using {} as configuration file...", config_file);
+	status_message = fmt::format("Đang sử dụng {} làm tệp tin cài đặt...", config_file);
 
 #if LIBWILDMIDI_VERSION >= 1027 // at least 0.4.3
 	init = (WildMidi_InitVIO(&vio, config_file.c_str(), EP_MIDI_FREQ, WILDMIDI_OPTS) == 0);

@@ -129,7 +129,7 @@ void Window_GameList::DrawItem(int index) {
 
 #ifndef USE_CUSTOM_FILEBUF
 	auto color = Font::ColorDefault;
-	if (ge.type == FileFinder::ProjectType::Unknown) {
+	if (ge.type == FileFinder::Unknown) {
 		color = Font::ColorHeal;
 	} else if (ge.type > FileFinder::ProjectType::Supported) {
 		color = Font::ColorKnockout;
@@ -149,33 +149,33 @@ void Window_GameList::DrawItem(int index) {
 void Window_GameList::DrawErrorText(bool show_dotdot) {
 	std::vector<std::string> error_msg = {
 #ifdef EMSCRIPTEN
-		"Did you type in a wrong URL?",
+		"Bạn có nhập sai URL không?",
 		"",
-		"If you think this is an error, contact the owner",
-		"of this website.",
+		"Nếu bạn nghĩ đây là lỗi, hãy liên hệ cho chủ sở",
+		"hửu của website này.",
 		"",
-		"Technical information: index.json was not found.",
+		"Thông tin thêm: không thể tìm thấy tệp index.json.",
 		"",
-		"Ensure through the dev tools of your browser that",
-		"the file is at the correct location.",
+		"Hãy chắc chắn qua công cụ phát triển trên trình",
+		"duyệt của bạn rằng các tệp tin đã ở đúng vị trí.",
 #else
-		"With EasyRPG Player you can play games created",
-		"with RPG Maker 2000 and RPG Maker 2003.",
+		"Với EasyRPG Player bạn có thể chơi các trò chơi",
+		"được tạo bằng RPG Maker 2000 và RPG Maker 2003.",
 		"",
-		"These games have an RPG_RT.ldb and they can be",
-		"extracted or in ZIP archives.",
+		"Các trò chơi này có một tệp tin RPG_RT.ldb và",
+		"chúng có thể được giải nén hoặc ở tệp nén ZIP.",
 		"",
-		"Newer engines such as RPG Maker XP, VX, MV and MZ",
-		"are not supported."
+		"Các nền tảng mới hơn như RPG Maker XP, VX, MV và",
+		"MZ không được hỗ trợ."
 #endif
 	};
 
 	int y = (show_dotdot ? 4 + 14 : 0);
 
 #ifdef EMSCRIPTEN
-	contents->TextDraw(0, y, Font::ColorKnockout, "The game was not found.");
+	contents->TextDraw(0, y, Font::ColorKnockout, "Không thể tìm thấy trò chơi.");
 #else
-	contents->TextDraw(0, y, Font::ColorKnockout, "No games found in the current directory.");
+	contents->TextDraw(0, y, Font::ColorKnockout, "Không có trò chơi nào ở thư mục hiện tại.");
 #endif
 
 	y += 14 * 2;

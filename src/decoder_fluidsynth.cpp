@@ -157,13 +157,13 @@ static bool load_default_sf(std::string& status_message, fluid_synth_t* syn) {
 	for (const auto& sf_name: sf_paths) {
 		if (fluid_synth_sfload(syn, sf_name.c_str(), 1) != FLUID_FAILED) {
 			sf_load_success = true;
-			status_message = fmt::format("Using soundfont {}", sf_name);
+			status_message = fmt::format("Đang sử dụng soundfont {}", sf_name);
 			break;
 		}
 	}
 
 	if (!sf_load_success) {
-		status_message = "Could not load soundfont.";
+		status_message = "Không thể tải soundfont.";
 		return false;
 	}
 
@@ -304,12 +304,12 @@ bool FluidSynthDecoder::ChangeGlobalSoundfont(std::string_view sf_path, std::str
 	}
 
 	if (fluid_synth_sfload(pending_global_synth.get(), ToString(sf_path).c_str(), 1) != FLUID_FAILED) {
-		status_message = fmt::format("Using soundfont {}", sf_path);
+		status_message = fmt::format("Đang sử dụng soundfont {}", sf_path);
 		return true;
 	}
 
 	pending_global_synth.reset();
-	status_message = "Could not load soundfont.";
+	status_message = "Không thể tải soundfont.";
 	return false;
 }
 
