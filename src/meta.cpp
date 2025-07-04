@@ -46,11 +46,11 @@
 
 // Extended vocab key/value pairs
 #define MTINI_EXVOCAB_IMPORT_SAVE_HELP_KEY "Vocab_ImportSaveHelp"
-#define MTINI_EXVOCAB_IMPORT_SAVE_HELP_VALUE "Import Existing Save (Multi-Games Only)"
+#define MTINI_EXVOCAB_IMPORT_SAVE_HELP_VALUE "Nhập dữ liệu lưu hiện có (Chỉ áp dụng cho nhiều trò chơi)"
 #define MTINI_EXVOCAB_IMPORT_SAVE_TITLE_KEY "Vocab_ImportSave"
-#define MTINI_EXVOCAB_IMPORT_SAVE_TITLE_VALUE "Import Save"
+#define MTINI_EXVOCAB_IMPORT_SAVE_TITLE_VALUE "Nhập dữ liệu lưu game"
 #define MTINI_EXVOCAB_TRANSLATE_TITLE_KEY "Vocab_Translate"
-#define MTINI_EXVOCAB_TRANSLATE_TITLE_VALUE "Language"
+#define MTINI_EXVOCAB_TRANSLATE_TITLE_VALUE "Ngôn ngữ"
 
 
 // Helper: Get the CRC32 of a given file as a hex string
