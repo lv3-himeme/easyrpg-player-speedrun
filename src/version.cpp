@@ -60,13 +60,13 @@ namespace Version {
 	const int MINOR = EP_VERSION_MINOR;
 	const int PATCH = EP_VERSION_PATCH;
 	const int TWEAK = EP_VERSION_TWEAK;
-	const char GIT[] = EP_VERSION_GIT;
+	const char GIT[] = "";
 	const char APPEND[] = EP_VERSION_APPEND;
 
 	std::string GetVersionString(bool with_git, bool with_append) {
 		std::string ver = Version::STRING;
 		if (with_git && std::strlen(GIT) > 0) {
-			//ver += std::string(" ") + GIT;
+			ver += std::string(" ") + GIT;
 		}
 		if (with_append && std::strlen(APPEND) > 0) {
 			ver += std::string(" ") + APPEND;

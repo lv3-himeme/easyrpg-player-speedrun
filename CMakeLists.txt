@@ -505,39 +505,6 @@ string(CONCAT PROJECT_VERSION
 	${PROJECT_VERSION_PATCH} "." ${PROJECT_VERSION_TWEAK})
 
 set(PLAYER_VERSION_GIT "")
-git_get_exact_tag(GIT_TAG)
-# Do not include a hash, if we are building a release tag
-if(NOT GIT_TAG)
-	# otherwise concatenate a version with hash
-	git_describe(GIT_DESCRIPTION)
-	if(GIT_DESCRIPTION)
-		string(REPLACE "-" ";" GIT_DESCRIPTION ${GIT_DESCRIPTION})
-		list(LENGTH GIT_DESCRIPTION GIT_DESCRIPTION_PARTS)
-		set(GIT_MESSAGE "Found git info: ")
-		if(GIT_DESCRIPTION_PARTS EQUAL 3)
-			list(GET GIT_DESCRIPTION 0 GIT_TAG)
-			list(GET GIT_DESCRIPTION 1 GIT_COMMITS)
-			list(GET GIT_DESCRIPTION 2 GIT_HASH)
-			string(APPEND GIT_MESSAGE "${GIT_COMMITS} commits since tag \"${GIT_TAG}\", ")
-			string(PREPEND GIT_COMMITS "+")
-			# strip the g prefix
-			string(SUBSTRING ${GIT_HASH} 1 -1 GIT_HASH)
-		else()
-			# no tags found, only hash
-			list(GET GIT_DESCRIPTION 0 GIT_HASH)
-		endif()
-		set(PLAYER_VERSION_GIT "git${GIT_COMMITS}@${GIT_HASH}")
-		string(APPEND GIT_MESSAGE "object hash is ${GIT_HASH}")
-		git_local_changes(GIT_DIRTY)
-		if(GIT_DIRTY STREQUAL "DIRTY")
-			string(APPEND PLAYER_VERSION_GIT "-dirty")
-			string(APPEND GIT_MESSAGE ", you have uncommitted changes")
-		endif()
-		string(APPEND PLAYER_VERSION_FULL "-${PLAYER_VERSION_GIT}")
-
-		message(STATUS "${GIT_MESSAGE}")
-	endif()
-endif()
 
 string(TIMESTAMP PLAYER_DATE "(%Y-%m-%d)")
 set(PLAYER_VERSION_APPEND ${PLAYER_DATE} CACHE STRING "Additional version information to include")
