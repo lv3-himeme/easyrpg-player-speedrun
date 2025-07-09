@@ -93,8 +93,8 @@
     }
 
     #dpad svg {
-      width: calc(2 * var(--controls-size));
-      height: calc(2 * var(--controls-size));
+      width: calc(3 * var(--controls-size));
+      height: calc(3 * var(--controls-size));
       fill: var(--color-gray);
     }
 
@@ -103,10 +103,27 @@
     }
 
     #apad > * {
-      width: var(--controls-size);
-      height: var(--controls-size);
+      width: calc(1.3 * var(--controls-size));
+      height: calc(1.3 * var(--controls-size));
       background-color: var(--color-gray);
       border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30pt;
+    }
+
+    #apad-G {
+      width: var(--controls-size);
+      height: var(--controls-size);
+      position: fixed;
+      top: 20px;
+      left: 20px;
+    }
+
+    #apad-shift {
+      font-size: 16pt;
+      margin-bottom: 15px;
     }
 
     #apad > :last-child {
@@ -143,8 +160,10 @@
     </div>
 
     <div id="apad" class="unselectable">
-      <div id="apad-escape" data-key="Escape"></div>
-      <div id="apad-enter" data-key="Enter"></div>
+      <div id="apad-G" data-key="KeyG">⏩</div>
+      <div id="apad-shift" data-key="ShiftLeft">Shift</div>
+      <div id="apad-escape" data-key="Escape">X</div>
+      <div id="apad-enter" data-key="Enter">Z</div>
     </div>
   </div>
 
@@ -152,7 +171,7 @@
 
 <script>
 const hasTouchscreen = window.matchMedia('(hover: none), (pointer: coarse)').matches;
-const preventNativeKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', ' ', 'F12'];
+const preventNativeKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', ' ', 'F12', 'ShiftLeft', 'ShiftRight'];
 const keys = new Map();
 const keysDown = new Map();
 const canvas = document.getElementById('canvas');
