@@ -126,6 +126,19 @@ namespace NobihazaVN {
         emscripten_fetch(&attr, url.c_str());
     }
 
+    ApiResponse RequestSync(const std::string& endpoint, const std::string& method, bool authentication, const nlohmann::json& data) {
+        NobihazaVN::ApiResponse response;
+        bool done = false;
+        Request(endpoint, method, authentication, data, [&](ApiResponse res) {
+            response = res;
+            done = true;
+        });
+        while (!done) {
+            emscripten_sleep(10);
+        }
+        return response;
+    }
+
     UserToken GetUserToken() {
         const char* user = get_cookie("nbhzvn_username");
         const char* tok = get_cookie("nbhzvn_login_token");

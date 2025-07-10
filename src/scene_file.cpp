@@ -149,10 +149,6 @@ void Scene_File::Start() {
 	}
 
 	std::vector<std::string> commands;
-#ifdef EMSCRIPTEN
-	commands.emplace_back("Tải save xuống");
-	commands.emplace_back("Tải save lên");
-#endif
 	extra_commands_window = std::make_unique<Window_Command>(commands);
 	extra_commands_window->SetZ(Priority_Window + 100);
 	extra_commands_window->SetVisible(false);

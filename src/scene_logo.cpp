@@ -67,6 +67,7 @@ void Scene_Logo::Start() {
 			if (!user.speedrun_data.ban_reason.empty()) {
 				Output::Error("Bạn đã bị Ban Tổ Chức tạm dừng tham gia sự kiện với lý do:\n{}\n\nNếu bạn cho rằng đây là sự nhầm lẫn, hãy liên hệ với Ban Tổ Chức để được xử lý.", user.speedrun_data.ban_reason);
 			}
+			if (user.speedrun_data.start_timestamp == 0) Speedrun::DeleteSave();
 			if (!skip_logos) {
 				logo_img = LoadLogo();
 				DrawTextOnLogo(false);

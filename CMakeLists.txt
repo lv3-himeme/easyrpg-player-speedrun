@@ -1200,7 +1200,7 @@ if(PLAYER_BUILD_EXECUTABLE AND ${PLAYER_TARGET_PLATFORM} MATCHES "^SDL.*$" AND N
 		# Do not confuse this with our own -DUSE_SDL
 		# Prevent Emscripten from pulling in bundled SDL headers that break the build
 		target_compile_options(${PROJECT_NAME} PUBLIC "-sUSE_SDL=0")
-		target_link_options(${PROJECT_NAME} PUBLIC "-sFETCH=1")
+		target_link_options(${PROJECT_NAME} PUBLIC "-sFETCH=1" "-sASYNCIFY=1" "-sASYNCIFY_IMPORTS='[\"emscripten_fetch\"]'")
 
 		set(PLAYER_JS_PREJS "${CMAKE_CURRENT_SOURCE_DIR}/resources/emscripten/emscripten-pre.js")
 		set(PLAYER_JS_POSTJS "${CMAKE_CURRENT_SOURCE_DIR}/resources/emscripten/emscripten-post.js")

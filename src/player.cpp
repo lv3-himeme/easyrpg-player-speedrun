@@ -98,6 +98,7 @@
 using namespace std::chrono_literals;
 
 namespace Player {
+	int WarningTimeout = 0;
 	int screen_width = SCREEN_TARGET_WIDTH;
 	int screen_height = SCREEN_TARGET_HEIGHT;
 	int menu_offset_x = (screen_width - MENU_WIDTH) / 2;
@@ -322,12 +323,19 @@ void Player::UpdateInput() {
 	}
 	float speed = 1.0;
 	if (Input::IsSystemPressed(Input::FAST_FORWARD_A)) {
-		speed = Input::GetInputSource()->GetConfig().speed_modifier_a.Get();
+		if (WarningTimeout == 0) {
+			Output::Warning("Bạn không được phép tăng tốc độ chơi trong quá trình tham gia sự kiện.");
+			WarningTimeout = 300;
+		}
 	}
 	if (Input::IsSystemPressed(Input::FAST_FORWARD_B)) {
-		speed = Input::GetInputSource()->GetConfig().speed_modifier_b.Get();
+		if (WarningTimeout == 0) {
+			Output::Warning("Bạn không được phép tăng tốc độ chơi trong quá trình tham gia sự kiện.");
+			WarningTimeout = 300;
+		}
 	}
 	Game_Clock::SetGameSpeedFactor(speed);
+	if (WarningTimeout > 0) WarningTimeout--;
 
 	if (Main_Data::game_quit) {
 		reset_flag |= Main_Data::game_quit->ShouldQuit();

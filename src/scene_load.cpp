@@ -22,6 +22,7 @@
 #include "player.h"
 #include "scene_load.h"
 #include "scene_map.h"
+#include "nbhzvn/speedrun.h"
 
 Scene_Load::Scene_Load() :
 	Scene_File(ToString(lcf::Data::terms.load_game_message)) {
@@ -29,9 +30,19 @@ Scene_Load::Scene_Load() :
 }
 
 void Scene_Load::Action(int index) {
-	std::string save_name = fs.FindFile(fmt::format("Save{:02d}.lsd", index + 1));
-
-	Player::LoadSavegame(save_name, index + 1);
+	#if EMSCRIPTEN
+		auto res = Speedrun::Continue();
+		if (res.success) {
+			Output::Info(res.message);
+			Speedrun::StartPing();
+			std::string save_name = fs.FindFile(fmt::format("Save{:02d}.lsd", index + 1));
+			Player::LoadSavegame(save_name, index + 1);
+		}
+		else Output::Warning(res.message);
+	#else
+		std::string save_name = fs.FindFile(fmt::format("Save{:02d}.lsd", index + 1));
+		Player::LoadSavegame(save_name, index + 1);
+	#endif
 }
 
 bool Scene_Load::IsSlotValid(int index) {

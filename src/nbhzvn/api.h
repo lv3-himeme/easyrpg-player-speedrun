@@ -25,7 +25,6 @@
 #include <emscripten/fetch.h>
 
 namespace NobihazaVN {
-
     struct ApiResponse {
         bool success;
         int status_code;
@@ -63,6 +62,7 @@ namespace NobihazaVN {
     void OnError(emscripten_fetch_t* fetch);
 
     void Request(const std::string& endpoint, const std::string& method, bool authentication, const nlohmann::json& data, std::function<void(ApiResponse)> callback);
+    ApiResponse RequestSync(const std::string& endpoint, const std::string& method, bool authentication, const nlohmann::json& data);
 
 }
 

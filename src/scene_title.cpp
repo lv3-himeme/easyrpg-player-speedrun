@@ -43,6 +43,7 @@
 #include "scene_load.h"
 #include "window_command.h"
 #include "baseui.h"
+#include "nbhzvn/speedrun.h"
 #include <lcf/reader_util.h>
 
 Scene_Title::Scene_Title() {
@@ -284,9 +285,20 @@ void Scene_Title::CommandNewGame() {
 	if (!CheckValidPlayerLocation()) {
 		Output::Warning("Game không cài đặt vị trí bắt đầu nào.");
 	} else {
-		Output::Debug("Starting new game");
-		Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Decision));
-		Player::SetupNewGame();
+		#ifdef EMSCRIPTEN
+			auto res = Speedrun::StartGame();
+			if (res.success) {
+				Speedrun::StartPing();
+				Output::Info(res.message);
+				Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Decision));
+				Player::SetupNewGame();
+			}
+			else Output::Warning(res.message);
+		#else
+			Output::Debug("Starting new game");
+			Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Decision));
+			Player::SetupNewGame();
+		#endif
 	}
 }
 

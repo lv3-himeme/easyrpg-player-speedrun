@@ -19,6 +19,14 @@
 #define NBHZVN_SPEEDRUN_H
 
 #include "api.h"
+#include <emscripten/html5.h>
+#include <emscripten/val.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <string>
+#include <vector>
+#include <cstdio>
 
 namespace Speedrun {
 
@@ -40,11 +48,19 @@ namespace Speedrun {
         Data speedrun_data;
     };
 
+    void DeleteRecursive(const std::string& path);
+    void DeleteSave();
+
     Data ParseSpeedrunData(const nlohmann::json& j);
 
     User ParseUser(const nlohmann::json& j);
     
     void CheckUser(NobihazaVN::UserToken user, std::function<void(User)> callback);
+    NobihazaVN::ApiResponse StartGame();
+    NobihazaVN::ApiResponse Continue();
+    void Ping(void*);
+    void StartPing();
+    void StopPing();
 
 }
 
