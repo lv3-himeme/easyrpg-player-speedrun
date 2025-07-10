@@ -270,7 +270,7 @@ void Output::ToggleLog() {
 
 void Output::ErrorStr(std::string const& err) {
 	WriteLog(LogLevel::Error, err);
-	std::string error = "Error:\n" + err + "\n\nEasyRPG Player will close now.";
+	std::string error = err;
 
 	static bool recursive_call = false;
 	if (!recursive_call && DisplayUi) {

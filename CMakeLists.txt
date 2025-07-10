@@ -27,7 +27,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS ON)
 
 # Must be at global scope, otherwise breaks -DPLAYER_BUILD_LIBLCF (see CMP0077)
-option(BUILD_SHARED_LIBS "Build shared easyrpg_libretro core" ON)
+option(BUILD_SHARED_LIBS "Build shared easyrpg_libretro core")
 
 option(CMAKE_FIND_PACKAGE_PREFER_CONFIG "Prefer config files over bundled FindXXX files. Set this to OFF when configuration fails and report a bug." ON)
 
@@ -476,6 +476,34 @@ add_library(${PROJECT_NAME} OBJECT
 	src/window_teleport.h
 	src/window_varlist.cpp
 	src/window_varlist.h
+	src/nbhzvn/api.cpp
+	src/nbhzvn/api.h
+	src/nbhzvn/speedrun.cpp
+	src/nbhzvn/speedrun.h
+)
+
+# ==========================================
+# speedrun.nbhzvn.one integration
+# ==========================================
+
+# URL definition
+
+set(NBHZVN_API_URL "" CACHE STRING "Nobihaza Vietnam Community API URL")
+if(NBHZVN_API_URL STREQUAL "")
+    message(FATAL_ERROR "NBHZVN_API_URL must be provided. Use -DNBHZVN_API_URL=url when running cmake.")
+endif()
+
+# Authentication token definition
+
+set(NBHZVN_API_TOKEN "" CACHE STRING "Nobihaza Vietnam Community API authentication token")
+if(NBHZVN_API_TOKEN STREQUAL "")
+    message(FATAL_ERROR "NBHZVN_API_TOKEN must be provided. Use -DNBHZVN_API_TOKEN=your_token when running cmake.")
+endif()
+
+# Code definitions
+set_property(SOURCE src/nbhzvn/api.cpp PROPERTY COMPILE_DEFINITIONS
+    NBHZVN_API_URL="${NBHZVN_API_URL}"
+    NBHZVN_API_TOKEN="${NBHZVN_API_TOKEN}"
 )
 
 # These are actually unused when building in CMake
@@ -1172,6 +1200,7 @@ if(PLAYER_BUILD_EXECUTABLE AND ${PLAYER_TARGET_PLATFORM} MATCHES "^SDL.*$" AND N
 		# Do not confuse this with our own -DUSE_SDL
 		# Prevent Emscripten from pulling in bundled SDL headers that break the build
 		target_compile_options(${PROJECT_NAME} PUBLIC "-sUSE_SDL=0")
+		target_link_options(${PROJECT_NAME} PUBLIC "-sFETCH=1")
 
 		set(PLAYER_JS_PREJS "${CMAKE_CURRENT_SOURCE_DIR}/resources/emscripten/emscripten-pre.js")
 		set(PLAYER_JS_POSTJS "${CMAKE_CURRENT_SOURCE_DIR}/resources/emscripten/emscripten-post.js")

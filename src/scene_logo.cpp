@@ -36,6 +36,9 @@
 #include "version.h"
 #include <ctime>
 #include <memory>
+#ifdef EMSCRIPTEN
+#include <nbhzvn/speedrun.h>
+#endif
 
 Scene_Logo::Scene_Logo() :
 	frame_counter(0) {
@@ -53,11 +56,30 @@ Scene_Logo::Scene_Logo(std::vector<std::vector<uint8_t>> logos, unsigned current
 }
 
 void Scene_Logo::Start() {
-	if (!skip_logos) {
-		logo_img = LoadLogo();
-		DrawTextOnLogo(false);
-		DrawLogo(logo_img);
-	}
+	#ifdef EMSCRIPTEN
+		// SPEEDRUN: Begin authentication
+		NobihazaVN::UserToken userData = NobihazaVN::GetUserToken();
+		if (userData.username.empty() || userData.token.empty()) {
+			Output::Error("Vui lòng đăng nhập tài khoản của bạn vào trang speedrun.nbhzvn.one trước.");
+		}
+
+		Speedrun::CheckUser(userData, [this](Speedrun::User user) {
+			if (!user.speedrun_data.ban_reason.empty()) {
+				Output::Error("Bạn đã bị Ban Tổ Chức tạm dừng tham gia sự kiện với lý do:\n{}\n\nNếu bạn cho rằng đây là sự nhầm lẫn, hãy liên hệ với Ban Tổ Chức để được xử lý.", user.speedrun_data.ban_reason);
+			}
+			if (!skip_logos) {
+				logo_img = LoadLogo();
+				DrawTextOnLogo(false);
+				DrawLogo(logo_img);
+			}
+		});
+	#else
+		if (!skip_logos) {
+			logo_img = LoadLogo();
+			DrawTextOnLogo(false);
+			DrawLogo(logo_img);
+		}
+	#endif
 }
 
 void Scene_Logo::vUpdate() {
