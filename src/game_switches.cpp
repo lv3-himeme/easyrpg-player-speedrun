@@ -40,7 +40,13 @@ bool Game_Switches::Set(int switch_id, bool value) {
 		ss.resize(switch_id);
 	}
 	ss[switch_id - 1] = value;
-	if (switch_id == Speedrun::COMPLETED_SWITCH && value == true) Speedrun::Complete();
+	if (switch_id == Speedrun::COMPLETED_SWITCH && value == true) {
+		EM_ASM_({
+			Speedrun.stop();
+		});
+		Speedrun::StopPing();
+		Speedrun::Complete();
+	}
 	if (switch_id == Speedrun::REDIRECT_SWITCH && value == true) EM_ASM({
 		document.location.href = UTF8ToString($0);
 	}, Speedrun::REDIRECT_URL.c_str());
