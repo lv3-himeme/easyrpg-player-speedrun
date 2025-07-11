@@ -62,8 +62,9 @@ void Scene_Logo::Start() {
 		if (userData.username.empty() || userData.token.empty()) {
 			Output::Error("Vui lòng đăng nhập tài khoản của bạn vào trang speedrun.nbhzvn.one trước.");
 		}
-
+		NobihazaVN::SetCurrentToken(userData);
 		Speedrun::CheckUser(userData, [this](Speedrun::User user) {
+			Speedrun::SetCurrentUser(user);
 			if (!user.speedrun_data.ban_reason.empty()) {
 				Output::Error("Bạn đã bị Ban Tổ Chức tạm dừng tham gia sự kiện với lý do:\n{}\n\nNếu bạn cho rằng đây là sự nhầm lẫn, hãy liên hệ với Ban Tổ Chức để được xử lý.", user.speedrun_data.ban_reason);
 			}

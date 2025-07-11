@@ -512,12 +512,12 @@ Game_Config Player::ParseCommandLine() {
 		}
 		if (cp.ParseNext(arg, 0, {"testplay", "--test-play"})) {
 			// Legacy RPG_RT argument - testplay
-			debug_flag = true;
+			// debug_flag = true;
 			continue;
 		}
 		if (cp.ParseNext(arg, 0, {"hidetitle", "--hide-title"})) {
 			// Legacy RPG_RT argument - hidetitle
-			hide_title_flag = true;
+			// hide_title_flag = true;
 			continue;
 		}
 		if(!battletest_handled && cp.ParseNext(arg, 4, {"battletest", "--battle-test"})) {
@@ -599,26 +599,26 @@ Game_Config Player::ParseCommandLine() {
 			continue;
 		}
 		if (cp.ParseNext(arg, 1, "--start-map-id")) {
-			if (arg.ParseValue(0, li_value)) {
-				start_map_id = li_value;
-			}
+			// if (arg.ParseValue(0, li_value)) {
+			// 	start_map_id = li_value;
+			// }
 			continue;
 		}
 		if (cp.ParseNext(arg, 2, "--start-position")) {
-			if (arg.ParseValue(0, li_value)) {
-				party_x_position = li_value;
-			}
-			if (arg.ParseValue(1, li_value)) {
-				party_y_position = li_value;
-			}
+			// if (arg.ParseValue(0, li_value)) {
+			// 	party_x_position = li_value;
+			// }
+			// if (arg.ParseValue(1, li_value)) {
+			// 	party_y_position = li_value;
+			// }
 			continue;
 		}
 		if (cp.ParseNext(arg, 4, "--start-party")) {
-			for (int i = 0; i < arg.NumValues(); ++i) {
-				if (arg.ParseValue(i, li_value)) {
-					party_members.push_back(li_value);
-				}
-			}
+			// for (int i = 0; i < arg.NumValues(); ++i) {
+			// 	if (arg.ParseValue(i, li_value)) {
+			// 		party_members.push_back(li_value);
+			// 	}
+			// }
 			continue;
 		}
 		if (cp.ParseNext(arg, 1, "--record-input")) {

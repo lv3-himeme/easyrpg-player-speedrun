@@ -18,10 +18,23 @@
 
 #include "speedrun.h"
 #include "output.h"
+#include "main_data.h"
+#include "game_variables.h"
 
 namespace Speedrun {
 
     int PingIntervalId = 0;
+
+    int PLAYTIME_HOURS_VARIABLE = 91;
+    int PLAYTIME_MINUTES_VARIABLE = 92;
+    int PLAYTIME_SECONDS_VARIABLE = 285;
+    int RANKING_VARIABLE = 117;
+    int SAVES_VARIABLE = 93;
+    int COMPLETED_SWITCH = 1134;
+    int REDIRECT_SWITCH = 1135;
+    std::string REDIRECT_URL = "https://speedrun.nbhzvn.one/completed";
+
+    User CurrentUser;
 
     Data ParseSpeedrunData(const nlohmann::json& j) {
         Data d;
@@ -62,7 +75,7 @@ namespace Speedrun {
     void DeleteSave() {
         DeleteRecursive("/easyrpg/Save");
         EM_ASM({
-            FS.syncfs(false, function (err) {
+            FS.syncfs(function(err) {
                 if (err) console.error("Sync failed after deletion:", err);
                 else console.log("Save folder deleted and changes synced to IndexedDB.");
             });
@@ -86,18 +99,22 @@ namespace Speedrun {
         });
     }
 
+    void SetCurrentUser(User user) {
+        CurrentUser = user;
+    }
+
     NobihazaVN::ApiResponse StartGame() {
-        NobihazaVN::UserToken user = NobihazaVN::GetUserToken();
+        NobihazaVN::UserToken& user = NobihazaVN::CurrentToken;
         return NobihazaVN::RequestSync("/start?username=" + user.username + "&token=" + user.token, "GET", true, {});
     }
 
     NobihazaVN::ApiResponse Continue() {
-        NobihazaVN::UserToken user = NobihazaVN::GetUserToken();
+        NobihazaVN::UserToken& user = NobihazaVN::CurrentToken;
         return NobihazaVN::RequestSync("/continue?username=" + user.username + "&token=" + user.token, "GET", true, {});
     }
 
     void Ping(void*) {
-        NobihazaVN::UserToken user = NobihazaVN::GetUserToken();
+        NobihazaVN::UserToken& user = NobihazaVN::CurrentToken;
         NobihazaVN::Request("/ping?username=" + user.username + "&token=" + user.token, "GET", true, {}, [](NobihazaVN::ApiResponse res) {
             if (!res.success) Output::Error(res.message);
         });
@@ -111,6 +128,37 @@ namespace Speedrun {
         if (PingIntervalId > 0) {
             emscripten_clear_interval(PingIntervalId);
             PingIntervalId = 0;
+        }
+    }
+
+    int32_t GetPlaytime() {
+        int32_t hours = Main_Data::game_variables->Get(PLAYTIME_HOURS_VARIABLE);
+        int32_t minutes = Main_Data::game_variables->Get(PLAYTIME_MINUTES_VARIABLE);
+        int32_t seconds = Main_Data::game_variables->Get(PLAYTIME_SECONDS_VARIABLE);
+        return (hours * 3600) + (minutes * 60) + seconds;
+    }
+
+    void Complete() {
+        User& speedrunUser = CurrentUser;
+        nlohmann::json j;
+        j["user_id"] = speedrunUser.user.id;
+        j["playtime"] = GetPlaytime();
+        j["saves"] = Main_Data::game_variables->Get(SAVES_VARIABLE);
+        j["ranking"] = Main_Data::game_variables->Get(RANKING_VARIABLE);
+        NobihazaVN::Request("/submit", "POST", true, j, [](NobihazaVN::ApiResponse res) {
+            if (res.success) Output::Info(res.message);
+            else Output::Error("Đã xảy ra lỗi khi tải lên phần chơi của bạn:\n{}\n\nHãy khởi động lại game và tải lại save để tiến hành gửi lại.", res.message);
+        });
+    }
+
+    extern "C" {
+        EMSCRIPTEN_KEEPALIVE
+        void AltTabMute() {
+            User& speedrunUser = CurrentUser;
+            nlohmann::json j;
+            j["user_id"] = speedrunUser.user.id;
+            j["ban_reason"] = "Chuyển đổi cửa sổ quá nhiều lần";
+            NobihazaVN::Request("/ban", "POST", true, j, [](NobihazaVN::ApiResponse res) {});
         }
     }
 

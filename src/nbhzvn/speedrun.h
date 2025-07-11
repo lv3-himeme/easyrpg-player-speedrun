@@ -30,6 +30,15 @@
 
 namespace Speedrun {
 
+    extern int PLAYTIME_HOURS_VARIABLE;
+    extern int PLAYTIME_MINUTES_VARIABLE;
+    extern int PLAYTIME_SECONDS_VARIABLE;
+    extern int RANKING_VARIABLE;
+    extern int SAVES_VARIABLE;
+    extern int COMPLETED_SWITCH;
+    extern int REDIRECT_SWITCH;
+    extern std::string REDIRECT_URL;
+
     struct Data {
         int id;
         int user_id;
@@ -48,12 +57,15 @@ namespace Speedrun {
         Data speedrun_data;
     };
 
+    extern User CurrentUser;
+
     void DeleteRecursive(const std::string& path);
     void DeleteSave();
 
     Data ParseSpeedrunData(const nlohmann::json& j);
 
     User ParseUser(const nlohmann::json& j);
+    void SetCurrentUser(User user);
     
     void CheckUser(NobihazaVN::UserToken user, std::function<void(User)> callback);
     NobihazaVN::ApiResponse StartGame();
@@ -61,6 +73,10 @@ namespace Speedrun {
     void Ping(void*);
     void StartPing();
     void StopPing();
+
+    int32_t GetPlaytime();
+
+    void Complete();
 
 }
 

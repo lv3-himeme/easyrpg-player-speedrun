@@ -23,6 +23,7 @@
 #include "scene_load.h"
 #include "scene_map.h"
 #include "nbhzvn/speedrun.h"
+#include "emscripten.h"
 
 Scene_Load::Scene_Load() :
 	Scene_File(ToString(lcf::Data::terms.load_game_message)) {
@@ -37,6 +38,11 @@ void Scene_Load::Action(int index) {
 			Speedrun::StartPing();
 			std::string save_name = fs.FindFile(fmt::format("Save{:02d}.lsd", index + 1));
 			Player::LoadSavegame(save_name, index + 1);
+			std::string display_name = res.data["display_name"].get<std::string>();
+			int32_t delta_time = static_cast<int32_t>(res.data["current_time"]) - static_cast<int32_t>(res.data["timestamp"]);
+			EM_ASM_({
+				Speedrun.start(UTF8ToString($0), $1, $2);
+			}, display_name.c_str(), Speedrun::GetPlaytime(), delta_time);
 		}
 		else Output::Warning(res.message);
 	#else

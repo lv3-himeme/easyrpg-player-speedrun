@@ -169,6 +169,8 @@
 
 {{{ SCRIPT }}}
 
+<!-- NobihazaVN speedrun integration -->
+<script src="./speedrun.js"></script>
 <script>
 const hasTouchscreen = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const preventNativeKeys = ['ArrowUp', 'ArrowDown', 'ArrowRight', 'ArrowLeft', ' ', 'F12', 'ShiftLeft', 'ShiftRight'];
@@ -188,6 +190,7 @@ window.addEventListener('load', (event) => {
       easyrpgPlayer = Module;
       easyrpgPlayer.initApi();
       canvas.focus();
+      Speedrun.module = Module;
 
       // Custom code here
     });

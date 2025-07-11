@@ -22,6 +22,9 @@ const std::string ApiUrl = std::string(NBHZVN_API_URL);
 const std::string ApiToken = std::string(NBHZVN_API_TOKEN);
 
 namespace NobihazaVN {
+    
+    UserToken CurrentToken;
+
     EM_JS(const char*, get_cookie, (const char* name), {
         const cookies = document.cookie.split("; ");
         for (let c of cookies) {
@@ -65,6 +68,7 @@ namespace NobihazaVN {
         }
 
         ctx->callback(res);
+        delete ctx->body;
         delete ctx;
         emscripten_fetch_close(fetch);
     }
@@ -86,6 +90,7 @@ namespace NobihazaVN {
         }
 
         ctx->callback(res);
+        delete ctx->body;
         delete ctx;
         emscripten_fetch_close(fetch);
     }
@@ -93,9 +98,12 @@ namespace NobihazaVN {
     void Request(const std::string& endpoint, const std::string& method, bool authentication, const nlohmann::json& data, std::function<void(ApiResponse)> callback) {
         std::string url = ApiUrl + endpoint;
         std::string token = ApiToken;
-        std::string body = (method != "GET") ? data.dump() : "";
+        std::string* bodyPtr = nullptr;
+        if (method != "GET") {
+            bodyPtr = new std::string(data.dump());
+        }
 
-        auto ctx = new FetchContext{callback};
+        auto ctx = new FetchContext{callback, bodyPtr};
 
         emscripten_fetch_attr_t attr;
         emscripten_fetch_attr_init(&attr);
@@ -106,8 +114,8 @@ namespace NobihazaVN {
         attr.userData = ctx;
 
         if (method != "GET") {
-            attr.requestData = body.c_str();
-            attr.requestDataSize = body.size();
+            attr.requestData = ctx->body->c_str();
+            attr.requestDataSize = ctx->body->size();
         }
 
         static std::string authHeader;
@@ -150,6 +158,10 @@ namespace NobihazaVN {
         free((void*)user);
         free((void*)tok);
         return t;
+    }
+
+    void SetCurrentToken(UserToken token) {
+        CurrentToken = token;
     }
 
 }

@@ -25,6 +25,7 @@
 #include <emscripten/fetch.h>
 
 namespace NobihazaVN {
+
     struct ApiResponse {
         bool success;
         int status_code;
@@ -37,6 +38,8 @@ namespace NobihazaVN {
         std::string token;
     };
 
+    extern UserToken CurrentToken;
+
     struct User {
         int id;
         std::string username;
@@ -45,6 +48,7 @@ namespace NobihazaVN {
 
     struct FetchContext {
         std::function<void(ApiResponse)> callback;
+        std::string* body;
     };
     
     template <typename T>
@@ -55,6 +59,7 @@ namespace NobihazaVN {
     }
 
     UserToken GetUserToken();
+    void SetCurrentToken(UserToken token);
 
     User ParseUser(const nlohmann::json& j);
 

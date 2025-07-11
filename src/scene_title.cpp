@@ -44,6 +44,7 @@
 #include "window_command.h"
 #include "baseui.h"
 #include "nbhzvn/speedrun.h"
+#include "emscripten.h"
 #include <lcf/reader_util.h>
 
 Scene_Title::Scene_Title() {
@@ -79,6 +80,12 @@ void Scene_Title::Start() {
 	}
 
 	CreateCommandWindow();
+
+	#ifdef EMSCRIPTEN
+		EM_ASM_({
+			Speedrun.stopTime();
+		});
+	#endif
 }
 
 
@@ -292,6 +299,11 @@ void Scene_Title::CommandNewGame() {
 				Output::Info(res.message);
 				Main_Data::game_system->SePlay(Main_Data::game_system->GetSystemSE(Main_Data::game_system->SFX_Decision));
 				Player::SetupNewGame();
+				std::string display_name = res.data["display_name"].get<std::string>();
+				int32_t delta_time = static_cast<int32_t>(res.data["current_time"]) - static_cast<int32_t>(res.data["timestamp"]);
+				EM_ASM_({
+					Speedrun.start(UTF8ToString($0), $1, $2);
+				}, display_name.c_str(), 0, delta_time);
 			}
 			else Output::Warning(res.message);
 		#else
