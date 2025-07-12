@@ -18,6 +18,7 @@
 
 #include "speedrun.h"
 #include "output.h"
+#include "player.h"
 #include "main_data.h"
 #include "game_variables.h"
 
@@ -116,7 +117,23 @@ namespace Speedrun {
     void Ping(void*) {
         NobihazaVN::UserToken& user = NobihazaVN::CurrentToken;
         NobihazaVN::Request("/ping?username=" + user.username + "&token=" + user.token, "GET", true, {}, [](NobihazaVN::ApiResponse res) {
-            if (!res.success) Output::Error(res.message);
+            if (!res.success) {
+                if (!Player::Paused) {
+                    if (res.status_code == 0) res.message += " Bạn sẽ được tiếp tục chơi khi đã kết nối lại thành công.";
+                    Player::Pause();
+                    EM_ASM({
+                        Speedrun.stopPlaytime = true;
+                        Speedrun.pause(UTF8ToString($0));
+                    }, res.message.c_str());
+                }
+            }
+            else {
+                Player::Resume();
+                EM_ASM({
+                    Speedrun.stopPlaytime = false;
+                    Speedrun.resume($0);
+                }, GetPlaytime());
+            }
         });
     }
 

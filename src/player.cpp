@@ -99,6 +99,7 @@ using namespace std::chrono_literals;
 
 namespace Player {
 	int WarningTimeout = 0;
+	bool Paused = false;
 	int screen_width = SCREEN_TARGET_WIDTH;
 	int screen_height = SCREEN_TARGET_HEIGHT;
 	int menu_offset_x = (screen_width - MENU_WIDTH) / 2;
@@ -229,6 +230,7 @@ void Player::Run() {
 }
 
 void Player::MainLoop() {
+	if (Paused) return;
 	Instrumentation::FrameScope iframe;
 
 	const auto frame_time = Game_Clock::now();
@@ -298,10 +300,13 @@ void Player::MainLoop() {
 }
 
 void Player::Pause() {
+	Paused = true;
 	Audio().BGM_Pause();
 }
 
 void Player::Resume() {
+	if (!Paused) return;
+	Paused = false;
 	Input::ResetKeys();
 	Audio().BGM_Resume();
 	Game_Clock::ResetFrame(Game_Clock::now());

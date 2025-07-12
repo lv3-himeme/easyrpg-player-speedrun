@@ -79,13 +79,13 @@ namespace NobihazaVN {
         NobihazaVN::ApiResponse res;
         res.success = false;
         res.status_code = fetch->status;
-        res.message = "Không thể kết nối tới máy chủ của Nobihaza Vietnam Community. Vui lòng thử lại.";
+        res.message = "Không thể kết nối tới máy chủ của Nobihaza Vietnam Community.";
         auto json_str = std::string(fetch->data, fetch->numBytes);
         nlohmann::json json = nlohmann::json::parse(json_str, nullptr, false);
         if (!json.is_discarded()) {
             res.success = json.value("success", false);
             res.status_code = json.value("status_code", fetch->status);
-            res.message = json.value("message", "Không thể kết nối tới máy chủ của Nobihaza Vietnam Community. Vui lòng thử lại.");
+            res.message = json.value("message", "Không thể kết nối tới máy chủ của Nobihaza Vietnam Community.");
             res.data = json.value("data", nlohmann::json{});
         }
 

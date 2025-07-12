@@ -35,6 +35,8 @@
  * Player namespace.
  */
 namespace Player {
+	extern bool Paused;
+
 	/** Bitmask for type of emulated engine */
 	enum EngineType {
 		EngineNone = 0,
